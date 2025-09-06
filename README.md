@@ -13,6 +13,10 @@
     SIEBENZWÖLF
     ZEHNEUNKUHR
 
+## Segmente
+
+![](Frontplatte/Info.svg)
+
 ## LED-Varianten
 
 - Pollin-[Sortiment](https://www.pollin.de/p/sort-led-neopixel-programmierbar-800567) programmierbar, mit SK6812 und WS2812B, 40 Stck 2,95€.
@@ -38,3 +42,13 @@ Berrybase-Streifen
 Neopixel 5050
 
 ![](https://cdn-shop.adafruit.com/970x728/1655-00.jpg)
+
+## Analoge LED-Treiber
+
+Kategorie bei [Mouser](https://www.mouser.de/c/semiconductors/driver-ics/led-lighting-driver-ics/)
+
+Als Schieberegister beispielsweise von [TI](https://www.mouser.de/ProductDetail/Texas-Instruments/TLC5916INE4?qs=vPP9GyyTAo06VIPRtWrixw%3D%3D)
+
+## Alternative Projekte
+
+- RPi-[Wordclock](https://github.com/bk1285/rpi_wordclock)

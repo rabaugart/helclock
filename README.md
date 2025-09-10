@@ -69,6 +69,10 @@ Kategorie bei [Mouser](https://www.mouser.de/c/semiconductors/driver-ics/led-lig
 
 Als Schieberegister beispielsweise von [TI](https://www.mouser.de/ProductDetail/Texas-Instruments/TLC5916INE4?qs=vPP9GyyTAo06VIPRtWrixw%3D%3D)
 
+## Controller
+
+- [ESP32-C6](https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32c6/esp32-c6-devkitm-1/user_guide.html)
+
 ## Distributoren
 
 - [Antratek](https://www.antratek.de/)

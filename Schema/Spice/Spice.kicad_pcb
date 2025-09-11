@@ -874,7 +874,7 @@
 			(remove_unused_layers no)
 			(net 10 "unconnected-(J1-Pin_4-Pad4)")
 			(pinfunction "Pin_4")
-			(pintype "passive")
+			(pintype "passive+no_connect")
 			(uuid "7c3b2364-afb3-443d-b1f3-ff3d4b35cb86")
 		)
 		(pad "5" thru_hole circle
@@ -1870,7 +1870,7 @@
 		(layer "Edge.Cuts")
 		(uuid "bc7561d3-bfe9-49a6-9fcd-bec21d018523")
 	)
-	(gr_text "P1-0.2"
+	(gr_text "P1-0.3a"
 		(at 73.5 54 0)
 		(layer "F.SilkS")
 		(uuid "4aaecd98-df0b-43f5-99a4-60fd7ae8f5a7")

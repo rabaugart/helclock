@@ -1,5 +1,5 @@
 
-# Schema Prototyp 1, Version P1-0.3
+# Schema Prototyp 1, Version P1-0.4a
 
 ![](Output/Spice.svg)
 

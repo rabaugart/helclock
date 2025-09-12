@@ -116,7 +116,7 @@
 			(outputdirectory "Output/")
 		)
 	)
-	(property "Version" "P1-0.3")
+	(property "Version" "P1-0.4a")
 	(net 0 "")
 	(net 1 "Net-(D1-DIN)")
 	(net 2 "GND")
@@ -185,7 +185,7 @@
 		(property ki_fp_filters "DIP*W7.62mm*")
 		(path "/50a72f3f-ef37-43a8-96f1-f344f212657b")
 		(sheetname "/")
-		(sheetfile "Spice.kicad_sch")
+		(sheetfile "Proto-1.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start 0 -2.56)
@@ -492,7 +492,7 @@
 				)
 			)
 		)
-		(property "Value" "Conn_02x03_Top_Bottom"
+		(property "Value" "Conn_02x03"
 			(at 6.215 11.18 0)
 			(layer "F.Fab")
 			(uuid "293d37ba-4739-4af7-9787-030c45357c5a")
@@ -530,7 +530,7 @@
 		(property ki_fp_filters "Connector*:*_2x??_*")
 		(path "/38c85c5d-4225-45e2-be5a-ba664010ab07")
 		(sheetname "/")
-		(sheetfile "Spice.kicad_sch")
+		(sheetfile "Proto-1.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start -2.35 -0.5)
@@ -970,7 +970,7 @@
 		(property ki_fp_filters "LED*WS2812*PLCC*5.0x5.0mm*P3.2mm*")
 		(path "/87466e41-7df6-4354-9363-2049ea1374e1")
 		(sheetname "/")
-		(sheetfile "Spice.kicad_sch")
+		(sheetfile "Proto-1.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start -3.5 -2.75)
@@ -1276,7 +1276,7 @@
 		(property ki_fp_filters "LED*WS2812*PLCC*5.0x5.0mm*P3.2mm*")
 		(path "/276cd0ca-7c16-4a1a-aebe-9af7c5bde029")
 		(sheetname "/")
-		(sheetfile "Spice.kicad_sch")
+		(sheetfile "Proto-1.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start -3.5 -2.75)
@@ -1582,7 +1582,7 @@
 		(property ki_fp_filters "LED*WS2812*PLCC*5.0x5.0mm*P3.2mm*")
 		(path "/4e23027e-2495-4f61-991f-0d836b12028b")
 		(sheetname "/")
-		(sheetfile "Spice.kicad_sch")
+		(sheetfile "Proto-1.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start -3.5 -2.75)

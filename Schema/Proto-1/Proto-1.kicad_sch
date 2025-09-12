@@ -1879,7 +1879,7 @@
 				)
 			)
 		)
-		(property "Value" "Conn_02x03_Top_Bottom"
+		(property "Value" "Conn_02x03"
 			(at 93.98 69.85 0)
 			(effects
 				(font

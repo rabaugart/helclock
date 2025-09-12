@@ -512,7 +512,7 @@
       "gencad": "",
       "idf": "",
       "netlist": "",
-      "plot": "",
+      "plot": "Output/",
       "pos_files": "",
       "specctra_dsn": "",
       "step": "Spice.stl",
@@ -631,7 +631,7 @@
       "workbook_filename": ""
     },
     "page_layout_descr_file": "",
-    "plot_directory": "",
+    "plot_directory": "Output/",
     "space_save_all_events": true,
     "spice_current_sheet_as_root": false,
     "spice_external_command": "spice \"%I\"",
@@ -648,5 +648,7 @@
       "Root"
     ]
   ],
-  "text_variables": {}
+  "text_variables": {
+    "Version": "P1-0.3"
+  }
 }

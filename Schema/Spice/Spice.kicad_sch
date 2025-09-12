@@ -1075,6 +1075,28 @@
 			(embedded_fonts no)
 		)
 	)
+	(text "Prototyp 1"
+		(exclude_from_sim no)
+		(at 194.564 189.738 0)
+		(effects
+			(font
+				(size 1.778 1.778)
+				(thickness 0.3556)
+				(bold yes)
+			)
+		)
+		(uuid "2af5008f-3872-425c-9ed0-17c28c0d62be")
+	)
+	(text "${Version}"
+		(exclude_from_sim no)
+		(at 273.304 193.294 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "e9d75e20-e878-413c-b230-d98c73ab24dc")
+	)
 	(junction
 		(at 74.93 73.66)
 		(diameter 0)

@@ -1117,13 +1117,15 @@
 		(at 74.93 53.34)
 		(uuid "2c0f8bfd-2d85-4730-905f-0df51a93f612")
 	)
-	(no_connect
-		(at 100.33 73.66)
-		(uuid "e57344dd-70f0-4b6a-b9a1-f0a1dcc4abc6")
-	)
-	(no_connect
-		(at 74.93 55.88)
-		(uuid "f6d591fc-0a8d-43b0-a5c6-324f551ac4ae")
+	(wire
+		(pts
+			(xy 74.93 55.88) (xy 80.01 55.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "015a8ee6-c578-4b4f-8b08-ca98e8944c23")
 	)
 	(wire
 		(pts
@@ -1194,6 +1196,16 @@
 			(type default)
 		)
 		(uuid "3f3e0ac5-ee35-4158-b66e-094ca044ae24")
+	)
+	(wire
+		(pts
+			(xy 102.87 73.66) (xy 100.33 73.66)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4028e827-1a9b-48c1-b49d-c0d730d28647")
 	)
 	(wire
 		(pts
@@ -1397,6 +1409,26 @@
 	)
 	(wire
 		(pts
+			(xy 102.87 69.85) (xy 102.87 73.66)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cb873abf-1509-42b9-80d5-c4a48ed5ad09")
+	)
+	(wire
+		(pts
+			(xy 105.41 69.85) (xy 102.87 69.85)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d17cc8bb-4573-426e-b64e-f1568697d2b0")
+	)
+	(wire
+		(pts
 			(xy 59.69 66.04) (xy 59.69 68.58)
 		)
 		(stroke
@@ -1444,6 +1476,28 @@
 			(type default)
 		)
 		(uuid "ffb90206-961b-4e65-a733-2d85fbd4b0af")
+	)
+	(global_label "Reset"
+		(shape input)
+		(at 105.41 69.85 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "25f1fae9-87bd-4dc1-bcf1-e0089a4194e3")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 113.5962 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
 	)
 	(global_label "SCL{slash}MISO"
 		(shape output)
@@ -1495,6 +1549,28 @@
 					(size 1.27 1.27)
 				)
 				(justify right)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "Reset"
+		(shape input)
+		(at 80.01 55.88 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "6e4eb8cc-45b9-45ac-8b5b-72e38e36a02f")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 88.1962 55.88 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -2773,6 +2849,48 @@
 				(path "/ad20f11c-8bda-436c-a37e-51accbad252d"
 					(reference "#PWR04")
 					(unit 1)
+				)
+			)
+		)
+	)
+	(sheet
+		(at 336.55 -21.59)
+		(size 213.36 125.73)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "ad0f374e-c26d-4dae-ba88-48b4005282b4")
+		(property "Sheetname" "Proto-1b"
+			(at 336.55 -22.3016 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Proto-1b.kicad_sch"
+			(at 336.55 104.7246 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "Proto-1"
+				(path "/ad20f11c-8bda-436c-a37e-51accbad252d"
+					(page "2")
 				)
 			)
 		)

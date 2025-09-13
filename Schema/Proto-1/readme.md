@@ -1,7 +1,7 @@
 
 # Schema Prototyp 1, Version P1-0.4a
 
-![](Output/Proto-1-DevBoard esp32c6.svg)
+![](Output/Proto-1-DevBoard-esp32c6.svg)
 
 ![](Output/DB1-front.png)
 

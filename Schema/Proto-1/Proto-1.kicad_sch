@@ -32,7 +32,7 @@
 		(size 214.63 123.19)
 		(exclude_from_sim no)
 		(in_bom yes)
-		(on_board yes)
+		(on_board no)
 		(dnp no)
 		(fields_autoplaced yes)
 		(stroke
@@ -74,7 +74,7 @@
 		(size 213.36 125.73)
 		(exclude_from_sim no)
 		(in_bom yes)
-		(on_board yes)
+		(on_board no)
 		(dnp no)
 		(fields_autoplaced yes)
 		(stroke

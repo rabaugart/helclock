@@ -116,7 +116,7 @@
 			(outputdirectory "Output/")
 		)
 	)
-	(property "Version" "DB1-0.4")
+	(property "Version" "DB1-0.5a")
 	(net 0 "")
 	(net 1 "Net-(D4-DOUT)")
 	(net 2 "GND")
@@ -181,6 +181,9 @@
 					(thickness 0.15)
 				)
 			)
+		)
+		(component_classes
+			(class "DevBoard")
 		)
 		(property ki_fp_filters "LED*WS2812*PLCC*5.0x5.0mm*P3.2mm*")
 		(path "/e3aec9c2-60a3-4373-9477-8690a2e288cb/3d20d5bc-ca0f-42af-8a0d-3094c117593d")
@@ -487,6 +490,9 @@
 					(thickness 0.15)
 				)
 			)
+		)
+		(component_classes
+			(class "DevBoard")
 		)
 		(property ki_fp_filters "LED*WS2812*PLCC*5.0x5.0mm*P3.2mm*")
 		(path "/e3aec9c2-60a3-4373-9477-8690a2e288cb/bf60da4e-1387-4514-b468-788cf9dcbfb2")

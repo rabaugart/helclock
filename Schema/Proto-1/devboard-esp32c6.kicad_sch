@@ -2657,6 +2657,15 @@
 				(hide yes)
 			)
 		)
+		(property "Component Class" "DevBoard"
+			(at 148.59 40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "278d1484-9e1e-4459-bae1-47046eb0065a")
 		)
@@ -3461,6 +3470,15 @@
 			)
 		)
 		(property "Description" "RGB LED with integrated controller"
+			(at 175.26 40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Component Class" "DevBoard"
 			(at 175.26 40.64 0)
 			(effects
 				(font

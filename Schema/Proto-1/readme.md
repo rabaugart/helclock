@@ -8,3 +8,7 @@
 ![](Output/Spice-F_Cu.svg)
 
 ![](Output/Spice-Edge_Cuts.svg)
+
+Ressourcen:
+
+- [Kicad](https://github.com/espressif/kicad-libraries) Library von Espressif

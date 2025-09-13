@@ -489,17 +489,7 @@
     "net_colors": {
       "+5V": "rgb(172, 74, 202)"
     },
-    "netclass_assignments": {
-      "SCK": [
-        "uC"
-      ],
-      "SCL{slash}MISO": [
-        "uC"
-      ],
-      "SDA{slash}MOSI": [
-        "uC"
-      ]
-    },
+    "netclass_assignments": null,
     "netclass_patterns": [
       {
         "netclass": "Default",
@@ -650,6 +640,14 @@
     [
       "ad0f374e-c26d-4dae-ba88-48b4005282b4",
       "Proto-1b"
+    ],
+    [
+      "4aaeaf4c-cbc4-4830-ae61-e4be9385d57c",
+      "Proto-1a"
+    ],
+    [
+      "e3aec9c2-60a3-4373-9477-8690a2e288cb",
+      "DevBoard esp32c6"
     ]
   ],
   "text_variables": {

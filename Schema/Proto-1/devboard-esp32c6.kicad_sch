@@ -1892,6 +1892,28 @@
 			(embedded_fonts no)
 		)
 	)
+	(text "${Version}"
+		(exclude_from_sim no)
+		(at 274.066 193.294 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "78425945-553e-49d8-9b6b-1102aa190580")
+	)
+	(text "Development Board ESP32-C6"
+		(exclude_from_sim no)
+		(at 207.772 189.992 0)
+		(effects
+			(font
+				(size 1.778 1.778)
+				(thickness 0.3556)
+				(bold yes)
+			)
+		)
+		(uuid "e9adbaa2-62a3-4fd8-a173-25a75e1e9829")
+	)
 	(junction
 		(at 148.59 26.67)
 		(diameter 0)

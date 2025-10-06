@@ -1,0 +1,162 @@
+(kicad_sch
+	(version 20250114)
+	(generator "eeschema")
+	(generator_version "9.0")
+	(uuid "ad20f11c-8bda-436c-a37e-51accbad252d")
+	(paper "A4")
+	(lib_symbols)
+	(text "Prototyp 1"
+		(exclude_from_sim no)
+		(at 194.564 189.738 0)
+		(effects
+			(font
+				(size 1.778 1.778)
+				(thickness 0.3556)
+				(bold yes)
+			)
+		)
+		(uuid "2af5008f-3872-425c-9ed0-17c28c0d62be")
+	)
+	(text "${Version}"
+		(exclude_from_sim no)
+		(at 273.304 193.294 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "e9d75e20-e878-413c-b230-d98c73ab24dc")
+	)
+	(sheet
+		(at 336.55 127)
+		(size 214.63 123.19)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board no)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "4aaeaf4c-cbc4-4830-ae61-e4be9385d57c")
+		(property "Sheetname" "Proto-1a"
+			(at 336.55 126.2884 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "proto-1a.kicad_sch"
+			(at 336.55 250.7746 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "Proto-1"
+				(path "/ad20f11c-8bda-436c-a37e-51accbad252d"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 336.55 -21.59)
+		(size 213.36 125.73)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board no)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "ad0f374e-c26d-4dae-ba88-48b4005282b4")
+		(property "Sheetname" "Proto-1b"
+			(at 336.55 -22.3016 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Proto-1b.kicad_sch"
+			(at 336.55 104.7246 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "Proto-1"
+				(path "/ad20f11c-8bda-436c-a37e-51accbad252d"
+					(page "2")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 68.58 243.84)
+		(size 185.42 114.3)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "e3aec9c2-60a3-4373-9477-8690a2e288cb")
+		(property "Sheetname" "DevBoard esp32c6"
+			(at 68.58 243.1284 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "devboard-esp32c6.kicad_sch"
+			(at 68.58 358.7246 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "Proto-1"
+				(path "/ad20f11c-8bda-436c-a37e-51accbad252d"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)

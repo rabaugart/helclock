@@ -1,0 +1,3 @@
+# Mechanik
+
+![](zeichnung.svg)

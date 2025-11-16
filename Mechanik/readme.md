@@ -1,3 +1,3 @@
 # Mechanik
 
-![](zeichnung.svg)
+![](Export/zeichnung.svg)

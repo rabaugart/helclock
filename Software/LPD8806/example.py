@@ -3,7 +3,7 @@
 from time import sleep
 import LPD8806
 
-led = LPD8806.strand()
+led = LPD8806.strand(1)
 
 while True:
     for i in range(5):

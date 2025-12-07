@@ -17,6 +17,6 @@ while True:
         led.update()
         sleep(0.3)
 
-    for i in range(300):
-        led.wheel()
-        led.update()
+#   for i in range(300):
+#       led.wheel()
+#       led.update()

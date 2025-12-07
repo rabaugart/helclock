@@ -19,6 +19,11 @@ The Pi image currently in use on `pi3c` from `/boot/issue.txt`:
 
 Activate `spi` on Raspi using `raspi-config`.
 
+Connect:
+
+    Pi MOSI (GPIO10/Pin 19) -> Strand DI
+    Pi SCLK (GPIO11/Pin 23) -> Strand CI
+
 Download, extract, then run the help:
 
      import LPD8806

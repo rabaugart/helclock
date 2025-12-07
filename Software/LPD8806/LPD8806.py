@@ -33,7 +33,7 @@ class strand:
             dev -- spi device
         """
         self.dev = dev
-        self.spi = file(self.dev, "wb")
+        self.spi = open(self.dev, "wb")
         self.leds = leds
         self.gamma = bytearray(256)
         self.buffer = [0 for x in range(self.leds)]

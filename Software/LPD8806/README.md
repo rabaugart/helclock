@@ -21,8 +21,8 @@ Activate `spi` on Raspi using `raspi-config`.
 
 Connect:
 
-    Pi MOSI (GPIO10/Pin 19) -> Strand DI
-    Pi SCLK (GPIO11/Pin 23) -> Strand CI
+    Pi MOSI (GPIO10/Pin 19) -> Strand DI/yellow
+    Pi SCLK (GPIO11/Pin 23) -> Strand CI/blue
 
 Download, extract, then run the help:
 

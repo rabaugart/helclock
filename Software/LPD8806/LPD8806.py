@@ -36,10 +36,8 @@ class strand:
         self.spi = open(self.dev, "wb")
         self.leds = leds
         self.gamma = bytearray(256)
-        self.buffer = [0 for x in range(self.leds)]
+        self.buffer = [bytearray(3) for x in range(self.leds)]
         self.wheelOffset = 0
-        for led in range(self.leds):
-            self.buffer[led] = bytearray(3)
         for i in range(256):
             # Color calculations from
             # http://learn.adafruit.com/light-painting-with-raspberry-pi

@@ -28,3 +28,5 @@ Download, extract, then run the help:
 
      import LPD8806
      help(LPD8806)
+
+[Gamma?](http://learn.adafruiat.com/light-painting-with-raspberry-pi)

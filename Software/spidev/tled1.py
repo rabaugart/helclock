@@ -25,12 +25,15 @@ class Color:
 blau = Color(0,0,0xFF)
 rot = Color(0xFF,0x00,0x00)
 grün = Color(0x00,0xFF,0X00)
+schwarz = Color(0,0,0)
 
 while True:
     blau.send(1.0)
     rot.send(1.0)
     grün.send(1.0)
-    spi.writebytes(sum(i.b for i in [blau,rot,grün]))
+    spi.writebytes(blau.b+rot.b+grün.b)
+    time.sleep(1)
+    spi.writebytes(schwarz.b*11)
     time.sleep(1)
 
 spi.close()

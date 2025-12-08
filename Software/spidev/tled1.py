@@ -30,5 +30,7 @@ while True:
     blau.send(1.0)
     rot.send(1.0)
     grün.send(1.0)
+    spi.writebytes(sum(i.b for i in [blau,rot,grün]))
+    time.sleep(1)
 
 spi.close()

@@ -23,6 +23,7 @@ Example:
     >> led.fill(255, 0, 0)
 """
 
+import time
 
 class strand:
 
@@ -36,7 +37,7 @@ class strand:
         self.spi = open(self.dev, "wb")
         self.leds = leds
         self.gamma = bytearray(256)
-        self.buffer = [bytearray(3) for x in range(self.leds)]
+        self.buffer = bytearray(self.leds*3)
         self.wheelOffset = 0
         for i in range(256):
             # Color calculations from
@@ -56,27 +57,25 @@ class strand:
         if end > self.leds:
             raise NameError("End invalid: " + str(end))
         for led in range(start, end):
-            self.buffer[led][0] = self.gamma[g]
-            self.buffer[led][1] = self.gamma[r]
-            self.buffer[led][2] = self.gamma[b]
+            self.buffer[led*3+0] = self.gamma[g]
+            self.buffer[led*3+1] = self.gamma[r]
+            self.buffer[led*3+2] = self.gamma[b]
 
     def set(self, pixel, r, g, b):
         """
         Set a single LED a specific color
         """
-        self.buffer[pixel][0] = self.gamma[g]
-        self.buffer[pixel][1] = self.gamma[r]
-        self.buffer[pixel][2] = self.gamma[b]
+        self.buffer[pixel*3+0] = self.gamma[g]
+        self.buffer[pixel*3+1] = self.gamma[r]
+        self.buffer[pixel*3+2] = self.gamma[b]
 
     def update(self):
         """
         Flush the buffer to the strand
         """
-        for x in range(self.leds):
-            self.spi.write(self.buffer[x])
-            self.spi.flush()
-        self.spi.write(bytearray(b'\x00'))
+        self.spi.write(self.buffer)
         self.spi.flush()
+        time.sleep(0.5)
 
     def wheel(self, start=0, end=0):
         """

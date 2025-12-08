@@ -11,9 +11,16 @@ spi.max_speed_hz = 2000000
 #spi.bits_per_word = 8
 #spi.lsbfirst = False
 
+länge = 11
+
 class Color:
     def __init__(self,r,g,b):
         self.b = bytearray([r,g,b])
+
+    def sendn(self,n=länge,sleep=1.0):
+        spi.writebytes(self.b*n)
+        if sleep:
+            time.sleep(sleep)
 
     def send(self,sleep=None):
         print(f"Sending {self.b}")
@@ -28,10 +35,10 @@ grün = Color(0x00,0xFF,0X00)
 schwarz = Color(0,0,0)
 
 while True:
-    blau.send(1.0)
-    rot.send(1.0)
-    grün.send(1.0)
-    spi.writebytes(blau.b+rot.b+grün.b)
+    blau.sendn()
+    rot.sendn()
+    grün.sendn()
+    spi.writebytes((blau.b+rot.b+grün.b)*4)
     time.sleep(1)
     spi.writebytes(schwarz.b*11)
     time.sleep(1)

@@ -41,4 +41,8 @@ class T3(unittest.TestCase):
         s.puttime(datetime.datetime.now().time())
         self.assertEqual(len(s.b),33)
 
-unittest.main()
+tl = unittest.TestLoader()
+#tl.loadTestsFromModule(c3.hclock)
+#tl.discover(".")
+tl.loadTestsFromName("c3.hclock")
+unittest.main(testLoader=tl,verbosity=2)

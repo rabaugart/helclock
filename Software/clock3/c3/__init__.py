@@ -8,3 +8,5 @@ try:
 except:
     from .tspi import Spi
     HAS_SPI = False
+
+from .hclock import TEXT

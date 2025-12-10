@@ -43,6 +43,26 @@ def wort_koordinaten(w):
     assert(col>=0)
     return [(row,col+i) for i in range(len(ws))]
 
+#
+# Indexe:
+# Col   0   1   2 ..  9   10
+#       ⬆  ⬇  ⬆     ⬇   ⬆
+# r0    9  10  29 .. 90  109
+# r1    8  11  28 .. 91  108
+# r.   ..  ..  .. .. ..
+# r.   ..  ..  .. .. ..   ..
+# r8    1  18  21 .. 98  101
+# r9    0  19  20 .. 99  100
+#
+# (0,0) -> 10
+# (1,0) ->  9
+# (10,0) -> 0
+# (0,1) -> 11
+
+def koordinaten_index(r,c):
+    "Index für ein Koordinatenpaar"
+    return (c+1)*10-r-1 if c % 2 == 0 else c*10+r
+
 # Die im Satz zu nutzende Stunde
 S = Enum('Stunde',["DIESE","NÄCHSTE"])
 
@@ -90,6 +110,10 @@ def satz(ti):
     "Vollständiger Satz zur Urzeit"
     return [ersetze_stunde(w,ti) for w in satz_vorlage(ti)]
 
+def wort_indexe(w):
+    "Tupel mit allen Indexen für ein Wort: (w,[i0,i1...])"
+    return (w,[koordinaten_index(*k) for k in wort_koordinaten(w)])
+
 class HTest(unittest.TestCase):
     def testWort(self):
         self.assertEqual(W.ACHT.name,"ACHT")
@@ -101,6 +125,18 @@ class HTest(unittest.TestCase):
         self.assertEqual(wort_koordinaten(W.ES),[(0,0),(0,1)])
         self.assertEqual(wort_koordinaten(W.FÜNF_A),[(0,7),(0,8),(0,9),(0,10)])
         self.assertEqual(wort_koordinaten(W.ACHT),[(7,7),(7,8),(7,9),(7,10)])
+    def testKoordinatenIndex(self):
+        self.assertEqual(koordinaten_index(0,0),9)
+        self.assertEqual(koordinaten_index(9,0),0)
+        self.assertEqual(koordinaten_index(0,1),10)
+        self.assertEqual(koordinaten_index(9,1),19)
+        self.assertEqual(koordinaten_index(0,10),109)
+        self.assertEqual(koordinaten_index(9,10),100)
+    def testWortIndexe(self):
+        self.assertEqual(wort_indexe(W.ES), (W.ES,[9,10]))
+        self.assertEqual(wort_indexe(W.UHR), (W.UHR,[80,99,100]))
+        self.assertEqual(wort_indexe(W.FÜNF_A), (W.FÜNF_A,[70,89,90,109]))
+        self.assertEqual(wort_indexe(W.ZEHN_B), (W.ZEHN_B,[0,19,20,39]))
     def testKonsistenz(self):
         # Jedes Wort wird in einer Zeile erwähnt
         l = sum((wl for (_,wl) in TEXT), [])

@@ -2,6 +2,8 @@
 
 ## Text
 
+10 Zeilen, 11 Spalten
+
     ESKISTAFÜNF
     ZEHNZWANZIG
     DREIVIERTEL
@@ -12,6 +14,25 @@
     SECHSNLACHT
     SIEBENZWÖLF
     ZEHNEUNKUHR
+
+Anpassungen
+
+    ESBISTAFÜNF
+      -
+    ZEHNZWANZIG
+    DREIVIERTEL
+    VORBESONACH
+       ----
+    HALBAELFÜNF
+    EINSDOMZWEI
+        --
+    DREIHELVIER
+        ---
+    SECHSRAACHT
+         --
+    SIEBENZWÖLF
+    ZEHNEUNFUHR
+           -
 
 ## Segmente
 

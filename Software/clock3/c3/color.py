@@ -7,6 +7,8 @@ class Color:
 ROT = Color(255,0,0)
 GRÜN = Color(0,255,0)
 BLAU = Color(0,0,255)
+WEISS = Color(255,255,255)
+SCHWARZ = Color(0,0,0)
 
 def colors_bytes(cols):
     "Wandelt Liste von Color in bytearray um"

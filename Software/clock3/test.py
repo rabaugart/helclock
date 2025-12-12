@@ -61,6 +61,14 @@ class T3(unittest.TestCase):
         self.assertEqual(len(s.bs),3)
         self.assertEqual(s.bs[0],c3.colors_bytes([c3.ROT,c3.GRÜN]))
         self.assertEqual(s.bs[2],c3.colors_bytes([c3.ROT,c3.GRÜN]))
+    def testGeneratorRotate(self):
+        self.assertEqual(c3.gen.steplist(3),[0,1,2,3,2,1])
+        s = c3.Spi()
+        s.putcolgen(c3.gen.take(c3.gen.blink([c3.ROT,c3.GRÜN],3),3),sleep=0.01)
+        self.assertEqual(len(s.bs),3)
+        self.assertEqual(s.bs[0],c3.colors_bytes([c3.ROT*0.0,c3.GRÜN*0.0]))
+        self.assertEqual(s.bs[1],c3.colors_bytes([c3.ROT*(1/3.0),c3.GRÜN*(1/3.0)]))
+        self.assertEqual(s.bs[2],c3.colors_bytes([c3.ROT*(2/3.0),c3.GRÜN*(2/3.0)]))
 
 def testiter(n):
     for i in [c3.ROT,c3.GRÜN]*n:

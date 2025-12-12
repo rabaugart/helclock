@@ -3,6 +3,10 @@ import functools
 class Color:
     def __init__(self,r,g,b):
         self.b = bytearray([r,g,b])
+    def __eq__(self,o):
+        if isinstance(o,Color):
+            return self.b == o.b
+        return False
     def __mul__(self,fac):
         nfac = max(min(float(fac),1.0),0.0)
         return Color(*list(int(i*nfac) for i in self.b))

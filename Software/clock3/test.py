@@ -23,6 +23,7 @@ class T3(unittest.TestCase):
         self.assertEqual(c3.colors_bytes([c3.ROT,c3.GRÜN]),bytearray.fromhex("FF 00 00 00 FF 00"))
     def testColor(self):
         self.assertEqual(c3.ROT.b,bytearray([255,0,0]))
+        self.assertEqual(c3.ROT,c3.Color(255,0,0))
         self.assertEqual((c3.ROT*0.5).b,bytearray([127,0,0]))
         self.assertEqual((c3.ROT*1.5).b,bytearray([255,0,0]))
         self.assertEqual((c3.ROT*-1.5).b,bytearray([0,0,0]))

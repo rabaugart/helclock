@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-import datetime
-import c3
+import datetime, itertools
+import c3, c3.gen
 import unittest
 
 class T3(unittest.TestCase):
@@ -37,7 +37,9 @@ class T3(unittest.TestCase):
     def testSpi(self):
         s = c3.Spi()
         s.putcolors([c3.ROT,c3.BLAU])
-        self.assertEqual(s.b,bytearray.fromhex("FF 00 00 00 00 FF"))
+        self.assertEqual(s.bs[0],bytearray.fromhex("FF 00 00 00 00 FF"))
+    def testSpiZeit(self):
+        s = c3.Spi()
         t = datetime.time(17,23,3)
         l = c3.time_ternär_colors(t)
         self.assertEqual(len(l),11)
@@ -46,7 +48,23 @@ class T3(unittest.TestCase):
         s.putcolors(l)
         s.putcolors(c3.time_ternär_colors(t))
         s.puttime(datetime.datetime.now().time())
-        self.assertEqual(len(s.b),33)
+        self.assertEqual(len(s.bs[0]),33)
+    def testGenerator(self):
+        s = c3.Spi()
+        s.putcolgen(testiter(1),0.01)
+        self.assertEqual(len(s.bs),2)
+        self.assertEqual(s.bs[0],c3.colors_bytes([c3.ROT,c3.ROT]))
+        self.assertEqual(s.bs[1],c3.colors_bytes([c3.GRÜN,c3.GRÜN]))
+    def testGeneratorRotate(self):
+        s = c3.Spi()
+        s.putcolgen(c3.gen.take(c3.gen.rotate([c3.ROT,c3.GRÜN]),3),sleep=0.01)
+        self.assertEqual(len(s.bs),3)
+        self.assertEqual(s.bs[0],c3.colors_bytes([c3.ROT,c3.GRÜN]))
+        self.assertEqual(s.bs[2],c3.colors_bytes([c3.ROT,c3.GRÜN]))
+
+def testiter(n):
+    for i in [c3.ROT,c3.GRÜN]*n:
+        yield [i,i]
 
 tl = unittest.TestLoader()
 #tl.loadTestsFromModule(c3.hclock)

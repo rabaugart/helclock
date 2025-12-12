@@ -20,3 +20,7 @@ SCHWARZ = Color(0,0,0)
 def colors_bytes(cols):
     "Wandelt Liste von Color in bytearray um"
     return functools.reduce( lambda a,b: a+b.b, cols, bytearray([]))
+
+def filled_color_array(cols,le,fillcolor=SCHWARZ):
+    "Fülle mit fillcolor bis zur Länge le auf"
+    return cols + [fillcolor]*(le-len(cols))

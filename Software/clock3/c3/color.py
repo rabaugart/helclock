@@ -3,6 +3,9 @@ import functools
 class Color:
     def __init__(self,r,g,b):
         self.b = bytearray([r,g,b])
+    def __mul__(self,fac):
+        nfac = max(min(float(fac),1.0),0.0)
+        return Color(*list(int(i*nfac) for i in self.b))
 
 ROT = Color(255,0,0)
 GRÜN = Color(0,255,0)

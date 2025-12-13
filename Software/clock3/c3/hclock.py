@@ -61,22 +61,22 @@ NCOLS = 11
 # Indexe:
 # Col   0   1   2 ..  9   10
 #       ⬆  ⬇  ⬆     ⬇   ⬆
-# r0    9  10  29 .. 90  109 # Erste zeile 9, 10, .. i-2 + 20
-# r1    8  11  28 .. 91  108
-# r.   ..  ..  .. .. ..
+# r0  109  90  89 .. 10    9
+# r1  108  91  88 .. 11    8
 # r.   ..  ..  .. .. ..   ..
-# r8    1  18  21 .. 98  101
-# r9    0  19  20 .. 99  100
-#
+# r8  101  98  81 .. 18    1
+# r9  100  99  80    19    0
 
 def koordinaten_index(r,c):
     "Abbildung i -> r,c"
-    return (c+1)*NROWS-r-1 if c % 2 == 0 else c*NROWS+r
+    top = (NROWS*NCOLS-1) - NROWS*c # Oberste Reihe
+    return top-r if c % 2 == 0 else top-(NROWS-1)+r
 
 def index_koordinaten(i):
     "Abbildung r,c -> i"
-    c = math.floor(i / NROWS)
-    r = (c+1)*NROWS-1-i if c % 2 == 0 else i-c*NROWS
+    c = NROWS-math.floor(i / NROWS)
+    top = NROWS*NCOLS-1 - NROWS*c
+    r = top-i if c%2 == 0 else i-top+NROWS-1
     return r,c
 
 def index_range():
@@ -183,8 +183,8 @@ def zeit_spi_generator(ti=None):
 #
 class HTest(unittest.TestCase):
     def testSatzIndex(self):
-        pass
-        #self.assertEqual(zeit_satz_indexe(time(11,5,0)),[9,10,])
+        self.assertEqual(zeit_satz_indexe(time(11,5,0)),
+            [6, 9, 10, 13, 26, 29, 30, 33, 34, 45, 50, 54, 69, 70, 90, 109])
     def testWort(self):
         self.assertEqual(W.ACHT.name,"ACHT")
         self.assertEqual(wort_stamm(W.ACHT),"ACHT")
@@ -208,20 +208,20 @@ class HTest(unittest.TestCase):
         self.assertEqual(len(set(index_range())),NROWS*NCOLS)
         self.assertEqual(min(index_range()),0)
         self.assertEqual(max(index_range()),NROWS*NCOLS-1)
-        self.assertEqual(koordinaten_index(0,0),9)
-        self.assertEqual(koordinaten_index(9,0),0)
-        self.assertEqual(koordinaten_index(0,1),10)
-        self.assertEqual(koordinaten_index(9,1),19)
-        self.assertEqual(koordinaten_index(0,10),109)
-        self.assertEqual(koordinaten_index(9,10),100)
-        self.assertEqual(index_koordinaten(100),(9,10))
+        self.assertEqual(koordinaten_index(0,0),109)
+        self.assertEqual(koordinaten_index(9,0),100)
+        self.assertEqual(koordinaten_index(0,1),90)
+        self.assertEqual(koordinaten_index(9,1),99)
+        self.assertEqual(koordinaten_index(0,10),9)
+        self.assertEqual(koordinaten_index(9,10),0)
+        self.assertEqual(index_koordinaten(100),(9,0))
         for i in index_range():
             self.assertEqual(koordinaten_index(*index_koordinaten(i)),i)
     def testWortIndexe(self):
-        self.assertEqual(wort_indexe(W.ES), (W.ES,[9,10]))
-        self.assertEqual(wort_indexe(W.UHR), (W.UHR,[80,99,100]))
-        self.assertEqual(wort_indexe(W.FÜNF_A), (W.FÜNF_A,[70,89,90,109]))
-        self.assertEqual(wort_indexe(W.ZEHN_B), (W.ZEHN_B,[0,19,20,39]))
+        self.assertEqual(wort_indexe(W.ES), (W.ES,[109,90]))
+        self.assertEqual(wort_indexe(W.UHR), (W.UHR,[20,19,0]))
+        self.assertEqual(wort_indexe(W.FÜNF_A), (W.FÜNF_A,[30,29,10,9]))
+        self.assertEqual(wort_indexe(W.ZEHN_B), (W.ZEHN_B,[100,99,80,79]))
     def testKonsistenz(self):
         # Jedes Wort wird in einer Zeile erwähnt
         l = sum((wl for (_,wl) in TEXT), [])

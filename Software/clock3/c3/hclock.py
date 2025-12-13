@@ -100,9 +100,9 @@ SATZ_INDEX = [
     [W.ZEHN_A, W.NACH, S.DIESE], # ...
     [W.VIERTEL, W.NACH, S.DIESE],
     [W.ZWANZIG, W.NACH, S.DIESE],
-    [W.FÜNF_A, W.ZWANZIG, W.NACH, S.DIESE],
+    [W.FÜNF_A, W.VOR, W.HALB, S.NÄCHSTE],
     [W.HALB, S.NÄCHSTE],
-    [W.FÜNF_A, W.ZWANZIG, W.VOR, S.NÄCHSTE],
+    [W.FÜNF_A, W.NACH, W.HALB, S.NÄCHSTE],
     [W.ZWANZIG, W.VOR, S.NÄCHSTE],
     [W.VIERTEL, W.VOR, S.NÄCHSTE],
     [W.ZEHN_A, W.VOR, S.NÄCHSTE],
@@ -246,6 +246,7 @@ class HTest(unittest.TestCase):
         self.assertEqual(stundenwort(23),W.ELF)
     def testZeitSatz(self):
         self.assertEqual(zeit_satz(time(1,5,0)),[W.ES,W.IST,W.FÜNF_A,W.NACH,W.EINS])
+        self.assertEqual(zeit_satz(time(1,25,0)),[W.ES,W.IST,W.FÜNF_A,W.VOR,W.HALB,W.ZWEI])
         self.assertEqual(zeit_satz(time(12,55,0)),[W.ES,W.IST,W.FÜNF_A,W.VOR,W.EINS])
         self.assertEqual(zeit_satz(time(13,5,0)),[W.ES,W.IST,W.FÜNF_A,W.NACH,W.EINS])
         self.assertEqual(zeit_satz(time(11,4,59)),[W.ES,W.IST,W.ELF,W.UHR])

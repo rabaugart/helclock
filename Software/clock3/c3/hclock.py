@@ -130,29 +130,36 @@ def wort_indexe(w):
     "Tupel mit allen Indexen für ein Wort: (w,[i0,i1...])"
     return (w,[koordinaten_index(*k) for k in wort_koordinaten(w)])
 
-def satz(ti):
+def default_zeit():
+    return datetime.datetime.now().time()
+
+def zeit_satz(ti=default_zeit()):
     "Vollständiger Satz zur Urzeit als Liste von Worten"
     return [ersetze_stunde(w,ti) for w in satz_vorlage(ti)]
 
-def satz_indexe(ti):
+def zeit_satz_indexe(ti=default_zeit()):
     "Alle Indexe des Satzes zur Zeit ti"
-    l = sum( (wort_indexe(i)[1] for i in satz(ti)), [] )
+    l = sum( (wort_indexe(i)[1] for i in zeit_satz(ti)), [] )
     l.sort()
     return l
 
-def index_test_string(il=None):
-    "Indexliste gerendert als String für die Terminal-Ausgabe"
+def index_buchstaben_pos(il=None):
+    "Liste mit (b,i,r,c) für Indexe"
     l = il if il else index_range()
     t = []
     for i in l:
         r,c = index_koordinaten(i)
         t.append((koordinaten_buchstabe(r,c),i,r,c))
+    return t
+
+def index_test_string(il=None):
+    "Indexliste gerendert als String für die Terminal-Ausgabe"
+    t = index_buchstaben_pos(il)
     return "\n".join( "".join(b for (b,i,r,c) in t if r==ar) for ar in range(NROWS) )
 
-def zeit_ascii_string(ti=None):
+def zeit_ascii_string(ti=default_zeit()):
     "Uhrzeit gerendert als String für die Terminal-Ausgabe"
-    t = ti if ti else datetime.datetime.now().time()
-    return index_test_string(satz_indexe(t))
+    return index_test_string(zeit_satz_indexe(ti))
 
 #
 # Test starten:
@@ -161,7 +168,7 @@ def zeit_ascii_string(ti=None):
 class HTest(unittest.TestCase):
     def testSatzIndex(self):
         pass
-        #self.assertEqual(satz_indexe(time(11,5,0)),[9,10,])
+        #self.assertEqual(zeit_satz_indexe(time(11,5,0)),[9,10,])
     def testWort(self):
         self.assertEqual(W.ACHT.name,"ACHT")
         self.assertEqual(wort_stamm(W.ACHT),"ACHT")
@@ -220,11 +227,11 @@ class HTest(unittest.TestCase):
         self.assertEqual(stundenwort(14),W.ZWEI)
         self.assertEqual(stundenwort(23),W.ELF)
     def testZeitSatz(self):
-        self.assertEqual(satz(time(11,4,59)),[W.ES,W.IST,W.ELF,W.UHR])
-        self.assertEqual(satz(time(11,5,0)),[W.ES,W.IST,W.FÜNF_A,W.NACH,W.ELF,W.UHR])
-        self.assertEqual(satz(time(11,10)),[W.ES,W.IST,W.ZEHN_A,W.NACH,W.ELF,W.UHR])
-        self.assertEqual(satz(time(11,15)),[W.ES,W.IST,W.VIERTEL,W.NACH,W.ELF,W.UHR])
-        self.assertEqual(satz(time(11,54,59)),[W.ES,W.IST,W.ZEHN_A,W.VOR,W.ZWÖLF,W.UHR])
-        self.assertEqual(satz(time(11,55)),[W.ES,W.IST,W.FÜNF_A,W.VOR,W.ZWÖLF,W.UHR])
-        self.assertEqual(satz(time(11,59,59)),[W.ES,W.IST,W.FÜNF_A,W.VOR,W.ZWÖLF,W.UHR])
-        self.assertEqual(satz(time(23,0)),[W.ES,W.IST,W.ELF,W.UHR])
+        self.assertEqual(zeit_satz(time(11,4,59)),[W.ES,W.IST,W.ELF,W.UHR])
+        self.assertEqual(zeit_satz(time(11,5,0)),[W.ES,W.IST,W.FÜNF_A,W.NACH,W.ELF,W.UHR])
+        self.assertEqual(zeit_satz(time(11,10)),[W.ES,W.IST,W.ZEHN_A,W.NACH,W.ELF,W.UHR])
+        self.assertEqual(zeit_satz(time(11,15)),[W.ES,W.IST,W.VIERTEL,W.NACH,W.ELF,W.UHR])
+        self.assertEqual(zeit_satz(time(11,54,59)),[W.ES,W.IST,W.ZEHN_A,W.VOR,W.ZWÖLF,W.UHR])
+        self.assertEqual(zeit_satz(time(11,55)),[W.ES,W.IST,W.FÜNF_A,W.VOR,W.ZWÖLF,W.UHR])
+        self.assertEqual(zeit_satz(time(11,59,59)),[W.ES,W.IST,W.FÜNF_A,W.VOR,W.ZWÖLF,W.UHR])
+        self.assertEqual(zeit_satz(time(23,0)),[W.ES,W.IST,W.ELF,W.UHR])

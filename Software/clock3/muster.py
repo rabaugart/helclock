@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import time, sys
-import c3, c3.gen
+import c3, c3.gen, c3.hclock
 
 s = c3.Spi()
 
@@ -12,3 +12,4 @@ ca = c3.filled_color_array( [c3.ROT,c3.GRÜN,c3.BLAU], int(SL) )
 #ca = ([c3.GRÜN*0.3,c3.GRÜN,c3.GRÜN*0.3]+[c3.SCHWARZ]*2)*3
 
 s.putcolgen(c3.gen.rotate(ca),0.05)
+#s.putcolgen(c3.hclock.zeit_spi_generator(),5)

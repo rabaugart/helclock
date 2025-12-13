@@ -16,6 +16,8 @@ class CRenderer:
         zyklus = 0
         while count:
             ch = w.getch()
+            if ch == 113:
+                count = False
             if ch >= 0:
                 cw = ch
             zyklus = (zyklus+1) % self.UPDATE_ZYKLEN
@@ -26,8 +28,6 @@ class CRenderer:
             for b,i,r,c in index_buchstaben_pos(zeit_satz_indexe()):
                 w.addstr( 5+2*r, 5+3*c, b)
             w.refresh()
-            if ch == 113:
-                count = False
         curses.resetty()
 
 CR = CRenderer()

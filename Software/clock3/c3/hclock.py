@@ -12,7 +12,7 @@ except:
     from .tspi import Spi
 
 W = Enum('W',"ES IST FÜNF_A ZEHN_A ZWANZIG DREI_A VIERTEL VOR NACH HALB \
-ELF FÜNF_B EINS ZWEI DREI_B VIER SECHS ACHT SIEBEN ZWÖLF ZEHN_B NEUN UHR".split(" "))
+ELF FÜNF_B EIN EINS ZWEI DREI_B VIER SECHS ACHT SIEBEN ZWÖLF ZEHN_B NEUN UHR".split(" "))
 
 TEXT = [
 # 01234567890
@@ -21,7 +21,7 @@ TEXT = [
 ("DREIVIERTEL", [ W.DREI_A, W.VIERTEL ]), # 2
 ("VORFUNKNACH", [ W.VOR, W.NACH ]), # 3
 ("HALBAELFÜNF", [ W.HALB, W.ELF, W.FÜNF_B ]), # 4
-("EINSXAMZWEI", [ W.EINS, W.ZWEI ]), # 5
+("EINSXAMZWEI", [ W.EIN, W.EINS, W.ZWEI ]), # 5
 ("DREIPMJVIER", [ W.DREI_B, W.VIER ]), # 6
 ("SECHSNLACHT", [ W.SECHS, W.ACHT ]), # 7
 ("SIEBENZWÖLF", [ W.SIEBEN, W.ZWÖLF ]), # 8
@@ -86,12 +86,16 @@ def koordinaten_range():
     return itertools.product( range(NROWS), range(NCOLS))
 
 # Die im Satz zu nutzende Stunde
-S = Enum('Stunde',["DIESE","NÄCHSTE"])
+S = Enum('Stunde',[
+    "DIESE",    # Rendere diese Stunde
+    "NÄCHSTE",  # Rendere diese Stunde
+    "VOLLE"     # Rendere diese Stunden zur vollen Stunde (EIN <-> EINS)
+])
 
 # Satzfragmente in Abhängigkeit von der Minute
 # "ES IST"  und "UHR" fehlen und müssen immer dazu gesetzt werden
 SATZ_INDEX = [
-    [S.DIESE], # Minute 0..5
+    [S.VOLLE, W.UHR], # Minute 0..5
     [W.FÜNF_A, W.NACH, S.DIESE], # Minute 5..10
     [W.ZEHN_A, W.NACH, S.DIESE], # ...
     [W.VIERTEL, W.NACH, S.DIESE],
@@ -111,7 +115,7 @@ def satz_index(ti):
 
 def satz_vorlage(ti):
     "Satzvorlage mit Stundenplatzhalter zur Uhrzeit"
-    return [W.ES,W.IST] + SATZ_INDEX[satz_index(ti)] + [W.UHR]
+    return [W.ES,W.IST] + SATZ_INDEX[satz_index(ti)]
 
 # Stundenworte zur Stunde
 STUNDEN = [W.ZWÖLF,W.EINS,W.ZWEI,W.DREI_B,W.VIER,W.FÜNF_B,W.SECHS,W.SIEBEN,W.ACHT,W.NEUN,W.ZEHN_B,W.ELF]
@@ -121,11 +125,13 @@ def stundenwort(st):
     return STUNDEN[st % len(STUNDEN)]
 
 def ersetze_stunde(wort,ti):
-    "Ersetze S.DIESE/S.NÄCHSTE durch Stundenwort"
+    "Ersetze S.DIESE/S.NÄCHSTE/S.VOLLE durch Stundenwort"
     if wort == S.DIESE:
         return stundenwort(ti.hour)
     if wort == S.NÄCHSTE:
         return stundenwort(ti.hour+1)
+    if wort == S.VOLLE:
+        return W.EIN if ti.hour in (1,13) else stundenwort(ti.hour)
     return wort
 
 def wort_indexe(w):
@@ -187,6 +193,8 @@ class HTest(unittest.TestCase):
         self.assertEqual(wort_stamm(W.FÜNF_A),"FÜNF")
     def testKoordinaten(self):
         self.assertEqual(wort_koordinaten(W.ES),[(0,0),(0,1)])
+        self.assertEqual(wort_koordinaten(W.EIN),[(5,0),(5,1),(5,2)])
+        self.assertEqual(wort_koordinaten(W.EINS),[(5,0),(5,1),(5,2),(5,3)])
         self.assertEqual(wort_koordinaten(W.FÜNF_A),[(0,7),(0,8),(0,9),(0,10)])
         self.assertEqual(wort_koordinaten(W.ACHT),[(7,7),(7,8),(7,9),(7,10)])
         self.assertEqual(len(list(koordinaten_range())),110)
@@ -237,11 +245,16 @@ class HTest(unittest.TestCase):
         self.assertEqual(stundenwort(14),W.ZWEI)
         self.assertEqual(stundenwort(23),W.ELF)
     def testZeitSatz(self):
+        self.assertEqual(zeit_satz(time(1,5,0)),[W.ES,W.IST,W.FÜNF_A,W.NACH,W.EINS])
+        self.assertEqual(zeit_satz(time(12,55,0)),[W.ES,W.IST,W.FÜNF_A,W.VOR,W.EINS])
+        self.assertEqual(zeit_satz(time(13,5,0)),[W.ES,W.IST,W.FÜNF_A,W.NACH,W.EINS])
         self.assertEqual(zeit_satz(time(11,4,59)),[W.ES,W.IST,W.ELF,W.UHR])
-        self.assertEqual(zeit_satz(time(11,5,0)),[W.ES,W.IST,W.FÜNF_A,W.NACH,W.ELF,W.UHR])
-        self.assertEqual(zeit_satz(time(11,10)),[W.ES,W.IST,W.ZEHN_A,W.NACH,W.ELF,W.UHR])
-        self.assertEqual(zeit_satz(time(11,15)),[W.ES,W.IST,W.VIERTEL,W.NACH,W.ELF,W.UHR])
-        self.assertEqual(zeit_satz(time(11,54,59)),[W.ES,W.IST,W.ZEHN_A,W.VOR,W.ZWÖLF,W.UHR])
-        self.assertEqual(zeit_satz(time(11,55)),[W.ES,W.IST,W.FÜNF_A,W.VOR,W.ZWÖLF,W.UHR])
-        self.assertEqual(zeit_satz(time(11,59,59)),[W.ES,W.IST,W.FÜNF_A,W.VOR,W.ZWÖLF,W.UHR])
+        self.assertEqual(zeit_satz(time(11,5,0)),[W.ES,W.IST,W.FÜNF_A,W.NACH,W.ELF])
+        self.assertEqual(zeit_satz(time(11,10)),[W.ES,W.IST,W.ZEHN_A,W.NACH,W.ELF])
+        self.assertEqual(zeit_satz(time(11,15)),[W.ES,W.IST,W.VIERTEL,W.NACH,W.ELF])
+        self.assertEqual(zeit_satz(time(11,54,59)),[W.ES,W.IST,W.ZEHN_A,W.VOR,W.ZWÖLF])
+        self.assertEqual(zeit_satz(time(11,55)),[W.ES,W.IST,W.FÜNF_A,W.VOR,W.ZWÖLF])
+        self.assertEqual(zeit_satz(time(11,59,59)),[W.ES,W.IST,W.FÜNF_A,W.VOR,W.ZWÖLF])
+        self.assertEqual(zeit_satz(time(1,0)),[W.ES,W.IST,W.EIN,W.UHR])
+        self.assertEqual(zeit_satz(time(13,0)),[W.ES,W.IST,W.EIN,W.UHR])
         self.assertEqual(zeit_satz(time(23,0)),[W.ES,W.IST,W.ELF,W.UHR])

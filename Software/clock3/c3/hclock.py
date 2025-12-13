@@ -133,11 +133,12 @@ def wort_indexe(w):
 def default_zeit():
     return datetime.datetime.now().time()
 
-def zeit_satz(ti=default_zeit()):
+def zeit_satz(ti=None):
     "Vollständiger Satz zur Urzeit als Liste von Worten"
-    return [ersetze_stunde(w,ti) for w in satz_vorlage(ti)]
+    t = ti if ti else default_zeit()
+    return [ersetze_stunde(w,t) for w in satz_vorlage(t)]
 
-def zeit_satz_indexe(ti=default_zeit()):
+def zeit_satz_indexe(ti=None):
     "Alle Indexe des Satzes zur Zeit ti"
     l = sum( (wort_indexe(i)[1] for i in zeit_satz(ti)), [] )
     l.sort()
@@ -157,7 +158,7 @@ def index_test_string(il=None):
     t = index_buchstaben_pos(il)
     return "\n".join( "".join(b for (b,i,r,c) in t if r==ar) for ar in range(NROWS) )
 
-def zeit_ascii_string(ti=default_zeit()):
+def zeit_ascii_string(ti=None):
     "Uhrzeit gerendert als String für die Terminal-Ausgabe"
     return index_test_string(zeit_satz_indexe(ti))
 

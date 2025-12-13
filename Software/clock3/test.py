@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import datetime, itertools
-import c3, c3.gen
+import c3, c3.gen, c3.hclock
 import unittest
 
 class T3(unittest.TestCase):
@@ -69,6 +69,10 @@ class T3(unittest.TestCase):
         self.assertEqual(s.bs[0],c3.colors_bytes([c3.ROT*0.0,c3.GRÜN*0.0]))
         self.assertEqual(s.bs[1],c3.colors_bytes([c3.ROT*(1/3.0),c3.GRÜN*(1/3.0)]))
         self.assertEqual(s.bs[2],c3.colors_bytes([c3.ROT*(2/3.0),c3.GRÜN*(2/3.0)]))
+    def testGeneratorHClock(self):
+        s = c3.Spi()
+        s.putcolgen(c3.gen.take(c3.hclock.zeit_spi_generator(),1),sleep=0.01)
+        self.assertEqual(len(s.bs[0]),c3.hclock.NROWS*c3.hclock.NCOLS*3)
 
 def testiter(n):
     for i in [c3.ROT,c3.GRÜN]*n:

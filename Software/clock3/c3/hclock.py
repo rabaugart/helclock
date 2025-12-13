@@ -2,6 +2,8 @@ import math, re, functools, datetime, itertools
 from datetime import time
 import unittest
 
+from .color import colors_bytes, SCHWARZ, ROT
+
 from enum import Enum
 
 try:
@@ -162,6 +164,13 @@ def zeit_ascii_string(ti=None):
     "Uhrzeit gerendert als String für die Terminal-Ausgabe"
     return index_test_string(zeit_satz_indexe(ti))
 
+def zeit_spi_generator(ti=None):
+    bg_color = SCHWARZ
+    fg_color = ROT
+    while True:
+        t = ti if ti else default_zeit()
+        s = zeit_satz_indexe(t)
+        yield list( (fg_color if i in s else bg_color) for i in index_range() )
 #
 # Test starten:
 #     python3 -m unittest c3.hclock

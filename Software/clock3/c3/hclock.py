@@ -1,4 +1,4 @@
-import math, re, functools
+import math, re, functools, datetime, itertools
 from datetime import time
 import unittest
 
@@ -26,6 +26,10 @@ TEXT = [
 ("ZEHNEUNKUHR", [ W.ZEHN_B, W.NEUN, W.UHR ]), # 9
 ]
 
+def koordinaten_buchstabe(r,c):
+    "Buchstabe an der Position r,c"
+    return TEXT[r][0][c]
+
 STAMM_RE = re.compile("^([^_]+).*$",re.U)
 
 def wort_stamm(w):
@@ -43,25 +47,41 @@ def wort_koordinaten(w):
     assert(col>=0)
     return [(row,col+i) for i in range(len(ws))]
 
+NROWS = 10
+NCOLS = 11
+
+#
+# (0,0) -> 10
+# (1,0) ->  9
+# (10,0) -> 0
+# (0,1) -> 11
 #
 # Indexe:
 # Col   0   1   2 ..  9   10
 #       ⬆  ⬇  ⬆     ⬇   ⬆
-# r0    9  10  29 .. 90  109
+# r0    9  10  29 .. 90  109 # Erste zeile 9, 10, .. i-2 + 20
 # r1    8  11  28 .. 91  108
 # r.   ..  ..  .. .. ..
 # r.   ..  ..  .. .. ..   ..
 # r8    1  18  21 .. 98  101
 # r9    0  19  20 .. 99  100
 #
-# (0,0) -> 10
-# (1,0) ->  9
-# (10,0) -> 0
-# (0,1) -> 11
 
 def koordinaten_index(r,c):
-    "Index für ein Koordinatenpaar"
-    return (c+1)*10-r-1 if c % 2 == 0 else c*10+r
+    "Abbildung i -> r,c"
+    return (c+1)*NROWS-r-1 if c % 2 == 0 else c*NROWS+r
+
+def index_koordinaten(i):
+    "Abbildung r,c -> i"
+    c = math.floor(i / NROWS)
+    r = (c+1)*NROWS-1-i if c % 2 == 0 else i-c*NROWS
+    return r,c
+
+def index_range():
+    return range(NROWS*NCOLS)
+
+def koordinaten_range():
+    return itertools.product( range(NROWS), range(NCOLS))
 
 # Die im Satz zu nutzende Stunde
 S = Enum('Stunde',["DIESE","NÄCHSTE"])
@@ -106,15 +126,42 @@ def ersetze_stunde(wort,ti):
         return stundenwort(ti.hour+1)
     return wort
 
-def satz(ti):
-    "Vollständiger Satz zur Urzeit"
-    return [ersetze_stunde(w,ti) for w in satz_vorlage(ti)]
-
 def wort_indexe(w):
     "Tupel mit allen Indexen für ein Wort: (w,[i0,i1...])"
     return (w,[koordinaten_index(*k) for k in wort_koordinaten(w)])
 
+def satz(ti):
+    "Vollständiger Satz zur Urzeit als Liste von Worten"
+    return [ersetze_stunde(w,ti) for w in satz_vorlage(ti)]
+
+def satz_indexe(ti):
+    "Alle Indexe des Satzes zur Zeit ti"
+    l = sum( (wort_indexe(i)[1] for i in satz(ti)), [] )
+    l.sort()
+    return l
+
+def index_test_string(il=None):
+    "Indexliste gerendert als String für die Terminal-Ausgabe"
+    l = il if il else index_range()
+    t = []
+    for i in l:
+        r,c = index_koordinaten(i)
+        t.append((koordinaten_buchstabe(r,c),i,r,c))
+    return "\n".join( "".join(b for (b,i,r,c) in t if r==ar) for ar in range(NROWS) )
+
+def zeit_ascii_string(ti=None):
+    "Uhrzeit gerendert als String für die Terminal-Ausgabe"
+    t = ti if ti else datetime.datetime.now().time()
+    return index_test_string(satz_indexe(t))
+
+#
+# Test starten:
+#     python3 -m unittest c3.hclock
+#
 class HTest(unittest.TestCase):
+    def testSatzIndex(self):
+        pass
+        #self.assertEqual(satz_indexe(time(11,5,0)),[9,10,])
     def testWort(self):
         self.assertEqual(W.ACHT.name,"ACHT")
         self.assertEqual(wort_stamm(W.ACHT),"ACHT")
@@ -125,13 +172,26 @@ class HTest(unittest.TestCase):
         self.assertEqual(wort_koordinaten(W.ES),[(0,0),(0,1)])
         self.assertEqual(wort_koordinaten(W.FÜNF_A),[(0,7),(0,8),(0,9),(0,10)])
         self.assertEqual(wort_koordinaten(W.ACHT),[(7,7),(7,8),(7,9),(7,10)])
+        self.assertEqual(len(list(koordinaten_range())),110)
+        self.assertEqual(len(set(koordinaten_range())),110)
+        self.assertEqual(min(koordinaten_range()),(0,0))
+        self.assertEqual(max(koordinaten_range()),(NROWS-1,NCOLS-1))
+        self.assertEqual(koordinaten_buchstabe(0,0),'E')
+        self.assertEqual(koordinaten_buchstabe(9,10),'R')
     def testKoordinatenIndex(self):
+        self.assertEqual(len(index_range()),NROWS*NCOLS)
+        self.assertEqual(len(set(index_range())),NROWS*NCOLS)
+        self.assertEqual(min(index_range()),0)
+        self.assertEqual(max(index_range()),NROWS*NCOLS-1)
         self.assertEqual(koordinaten_index(0,0),9)
         self.assertEqual(koordinaten_index(9,0),0)
         self.assertEqual(koordinaten_index(0,1),10)
         self.assertEqual(koordinaten_index(9,1),19)
         self.assertEqual(koordinaten_index(0,10),109)
         self.assertEqual(koordinaten_index(9,10),100)
+        self.assertEqual(index_koordinaten(100),(9,10))
+        for i in index_range():
+            self.assertEqual(koordinaten_index(*index_koordinaten(i)),i)
     def testWortIndexe(self):
         self.assertEqual(wort_indexe(W.ES), (W.ES,[9,10]))
         self.assertEqual(wort_indexe(W.UHR), (W.UHR,[80,99,100]))

@@ -9,4 +9,4 @@ except:
     from .tspi import Spi
     HAS_SPI = False
 
-from .hclock import TEXT
+from .hclock import TEXT, index_test_string

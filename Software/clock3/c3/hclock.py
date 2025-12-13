@@ -68,12 +68,12 @@ NCOLS = 11
 # r9  100  99  80    19    0
 
 def koordinaten_index(r,c):
-    "Abbildung i -> r,c"
+    "Abbildung r,c -> i"
     top = (NROWS*NCOLS-1) - NROWS*c # Oberste Reihe
     return top-r if c % 2 == 0 else top-(NROWS-1)+r
 
 def index_koordinaten(i):
-    "Abbildung r,c -> i"
+    "Abbildung i -> r,c"
     c = NROWS-math.floor(i / NROWS)
     top = NROWS*NCOLS-1 - NROWS*c
     r = top-i if c%2 == 0 else i-top+NROWS-1

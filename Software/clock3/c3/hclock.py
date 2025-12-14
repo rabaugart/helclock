@@ -3,6 +3,7 @@ from datetime import time
 import unittest
 
 from .color import colors_bytes, SCHWARZ, ROT
+from .xtra import XW
 
 from enum import Enum
 
@@ -16,16 +17,16 @@ ELF FÜNF_B EIN EINS ZWEI DREI_B VIER SECHS ACHT SIEBEN ZWÖLF ZEHN_B NEUN UHR".
 
 TEXT = [
 # 01234567890
-("ESKISTAFÜNF", [ W.ES, W.IST, W.FÜNF_A ]), # 0
+("ESBISTAFÜNF", [ W.ES, W.IST, W.FÜNF_A, XW.B ]), # 0
 ("ZEHNZWANZIG", [ W.ZEHN_A, W.ZWANZIG ]), # 1
 ("DREIVIERTEL", [ W.DREI_A, W.VIERTEL ]), # 2
-("VORFUNKNACH", [ W.VOR, W.NACH ]), # 3
+("VORBESONACH", [ W.VOR, W.NACH, XW.BE, XW.SO ]), # 3
 ("HALBAELFÜNF", [ W.HALB, W.ELF, W.FÜNF_B ]), # 4
-("EINSXAMZWEI", [ W.EIN, W.EINS, W.ZWEI ]), # 5
-("DREIPMJVIER", [ W.DREI_B, W.VIER ]), # 6
-("SECHSNLACHT", [ W.SECHS, W.ACHT ]), # 7
+("EINSDOMZWEI", [ W.EIN, W.EINS, W.ZWEI, XW.DOM ]), # 5
+("DREIHELVIER", [ W.DREI_B, W.VIER, XW.HEL ]), # 6
+("SECHSRAACHT", [ W.SECHS, W.ACHT, XW.RA ]), # 7
 ("SIEBENZWÖLF", [ W.SIEBEN, W.ZWÖLF ]), # 8
-("ZEHNEUNKUHR", [ W.ZEHN_B, W.NEUN, W.UHR ]), # 9
+("ZEHNEUNFUHR", [ W.ZEHN_B, W.NEUN, W.UHR, XW.F ]), # 9
 ]
 
 def koordinaten_buchstabe(r,c):
@@ -177,6 +178,7 @@ def zeit_spi_generator(ti=None):
         t = ti if ti else default_zeit()
         s = zeit_satz_indexe(t)
         yield list( (fg_color if i in s else bg_color) for i in index_range() )
+
 #
 # Test starten:
 #     python3 -m unittest c3.hclock
@@ -203,6 +205,10 @@ class HTest(unittest.TestCase):
         self.assertEqual(max(koordinaten_range()),(NROWS-1,NCOLS-1))
         self.assertEqual(koordinaten_buchstabe(0,0),'E')
         self.assertEqual(koordinaten_buchstabe(9,10),'R')
+        # Extra Worte
+        self.assertEqual(wort_koordinaten(XW.B),[(0,2)])
+        self.assertEqual(wort_koordinaten(XW.BE),[(3,3),(3,4)])
+        self.assertEqual(wort_koordinaten(XW.DOM),[(5,4),(5,5),(5,6)])
     def testKoordinatenIndex(self):
         self.assertEqual(len(index_range()),NROWS*NCOLS)
         self.assertEqual(len(set(index_range())),NROWS*NCOLS)

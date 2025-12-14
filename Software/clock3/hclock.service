@@ -1,0 +1,16 @@
+[Unit]
+Description=Helclock
+Documentation=None
+After=network.target auditd.service
+
+[Service]
+ExecStart=/usr/bin/python /home/pira/dev/helclock/Software/clock3/muster.py
+KillMode=process
+Restart=on-failure
+RestartPreventExitStatus=255
+Type=simple
+RuntimeDirectory=/home/pira/dev/helclock/Software/clock3/
+RuntimeDirectoryMode=0755
+
+[Install]
+WantedBy=multi-user.target

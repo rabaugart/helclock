@@ -1,11 +1,7 @@
-from enum import Enum
 import unittest
 import datetime
 
-# Extra Worte, zusätzlich zur Uhrzeit
-XW = Enum("XW","B BE SO DOM HEL RA F")
-
-TagKat = Enum("TagKat", "Normal Feiertag FamGeburtstag BekGeburtstag")
+from .worte import XW, TagKat
 
 TagKatMap = {
     (1,6) : ([XW.DOM], TagKat.FamGeburtstag),

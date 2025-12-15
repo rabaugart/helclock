@@ -11,6 +11,7 @@ def rotate(cl):
         cl = rotate_list(cl)
 
 def steplist(nsteps):
+    "Einmal rauf und wieder runter 0..n..1"
     return list(range(nsteps))+list(range(nsteps,0,-1))
 
 def blink(cl,nsteps=5):

@@ -171,6 +171,7 @@ def zeit_ascii_string(ti=None):
     return index_test_string(zeit_satz_indexe(ti))
 
 def zeit_spi_generator(ti=None):
+    "Einfacher Generator nur für Zeitsätze mit Vorder- und Hintergrundfarbe"
     bg_color = SCHWARZ
     fg_color = ROT
     while True:

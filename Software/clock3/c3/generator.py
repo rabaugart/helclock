@@ -26,10 +26,11 @@ class ColWortGenerator:
 
     def __iter__(self):
         dt = self.zeit()
-        s = Strang(self.BG_COLOR)
-        self.fülle_xtra(dt,s)
-        self.fülle_zeit(dt.time(),s)
-        yield s
+        while True:
+            s = Strang(self.BG_COLOR)
+            self.fülle_xtra(dt,s)
+            self.fülle_zeit(dt.time(),s)
+            yield s
 
     def fülle_xtra(self,dt,st):
         "Extra Worte zur datetime dt"

@@ -21,12 +21,12 @@ class Strang(list):
 
 class ColWortGenerator:
 
-    BG_COLOR = c.SCHWARZ
+    BG_COLOR = c.GRÜN*0.2
     FG_COLOR = c.ROT
 
     def __iter__(self):
-        dt = self.zeit()
         while True:
+            dt = self.zeit()
             s = Strang(self.BG_COLOR)
             self.fülle_xtra(dt,s)
             self.fülle_zeit(dt.time(),s)

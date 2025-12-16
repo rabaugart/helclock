@@ -21,7 +21,7 @@ class Strang(list):
 
 class ColWortGenerator:
 
-    BG_COLOR = c.GRÜN*0.2
+    BG_COLOR = c.GRÜN*0.1
     FG_COLOR = c.ROT
 
     def __iter__(self):

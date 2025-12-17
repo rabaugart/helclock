@@ -4,4 +4,5 @@ class Spi(SpiBase):
     def __init__(self):
         self.bs = []
     def putbytes(self,b):
-        self.bs.append( b )
+        if len(self.bs) < 1000:
+            self.bs.append( b )

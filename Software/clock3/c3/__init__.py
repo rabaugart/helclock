@@ -14,3 +14,5 @@ from .hclock import TEXT, index_test_string, HTest
 from .xtra import XWTest
 
 from .test import T3
+
+from .generator import TestGen

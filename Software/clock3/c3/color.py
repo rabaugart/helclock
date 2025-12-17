@@ -10,11 +10,14 @@ class Color:
     def __mul__(self,fac):
         nfac = max(min(float(fac),1.0),0.0)
         return Color(*list(int(i*nfac) for i in self.b))
+    def __hash__(self):
+        return hash(self.b.hex())
 
 ROT = Color(255,0,0)
 GRÜN = Color(0,255,0)
 BLAU = Color(0,0,255)
 WEISS = Color(255,255,255)
+LILA = Color(255,0,255)
 SCHWARZ = Color(0,0,0)
 
 def colors_bytes(cols):

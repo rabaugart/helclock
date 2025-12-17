@@ -1,19 +1,18 @@
 import math, re, functools, datetime, itertools
 from datetime import time
+from enum import Enum
+
 import unittest
 
 from .color import colors_bytes, SCHWARZ, ROT
 from .xtra import XW
 
-from enum import Enum
+from .worte import W
 
 try:
     from .spi import Spi
 except:
     from .tspi import Spi
-
-W = Enum('W',"ES IST FÜNF_A ZEHN_A ZWANZIG DREI_A VIERTEL VOR NACH HALB \
-ELF FÜNF_B EIN EINS ZWEI DREI_B VIER SECHS ACHT SIEBEN ZWÖLF ZEHN_B NEUN UHR".split(" "))
 
 TEXT = [
 # 01234567890
@@ -172,6 +171,7 @@ def zeit_ascii_string(ti=None):
     return index_test_string(zeit_satz_indexe(ti))
 
 def zeit_spi_generator(ti=None):
+    "Einfacher Generator nur für Zeitsätze mit Vorder- und Hintergrundfarbe"
     bg_color = SCHWARZ
     fg_color = ROT
     while True:

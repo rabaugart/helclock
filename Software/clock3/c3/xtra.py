@@ -1,11 +1,8 @@
-from enum import Enum
 import unittest
 import datetime
 
-# Extra Worte, zusätzlich zur Uhrzeit
-XW = Enum("XW","B BE SO DOM HEL RA F")
-
-TagKat = Enum("TagKat", "Normal Feiertag FamGeburtstag BekGeburtstag")
+from .worte import XW, TagKat
+from .color import LILA
 
 TagKatMap = {
     (1,6) : ([XW.DOM], TagKat.FamGeburtstag),
@@ -15,12 +12,29 @@ TagKatMap = {
     (6,14) : ([XW.HEL], TagKat.FamGeburtstag),
 }
 
-def dt_tagkatlist(dt):
+TagKatColors = {
+    TagKat.Feiertag : LILA,
+    TagKat.FamGeburtstag : LILA,
+    TagKat.BekGeburtstag : LILA,
+}
+
+def dt_tagkats(dt):
     return TagKatMap.get((dt.month,dt.day),None)
+
+def dt_tagkatcols(dt):
+    "[(xw1,col1),(xw2,col2),...] ggf. leer"
+    ws_tka = dt_tagkats(dt)
+    if not ws_tka:
+        return []
+    ws, tkat = ws_tka
+    col = TagKatColors.get(tkat,None)
+    return list( (wi,col) for wi in ws ) if col else []
 
 class XWTest(unittest.TestCase):
     def testSatz(self):
         dt = datetime.datetime.fromisoformat("2025-01-06 12:00:00")
-        self.assertEqual(dt_tagkatlist(dt),TagKatMap[(1,6)])
+        self.assertEqual(dt_tagkats(dt),TagKatMap[(1,6)])
+        self.assertEqual(dt_tagkatcols(dt),[(XW.DOM,LILA)])
         dt = datetime.datetime.fromisoformat("2025-01-07 12:00:00")
-        self.assertEqual(dt_tagkatlist(dt),None)
+        self.assertEqual(dt_tagkats(dt),None)
+        self.assertEqual(dt_tagkatcols(dt),[])

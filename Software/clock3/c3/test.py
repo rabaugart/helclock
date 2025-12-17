@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import datetime, itertools
+import datetime
 import c3, c3.gen, c3.hclock
 import unittest
 
@@ -61,7 +61,7 @@ class T3(unittest.TestCase):
         self.assertEqual(len(s.bs),3)
         self.assertEqual(s.bs[0],c3.colors_bytes([c3.ROT,c3.GRÜN]))
         self.assertEqual(s.bs[2],c3.colors_bytes([c3.ROT,c3.GRÜN]))
-    def testGeneratorRotate(self):
+    def testGeneratorRotate2(self):
         self.assertEqual(c3.gen.steplist(3),[0,1,2,3,2,1])
         s = c3.Spi()
         s.putcolgen(c3.gen.take(c3.gen.blink([c3.ROT,c3.GRÜN],3),3),sleep=0.01)

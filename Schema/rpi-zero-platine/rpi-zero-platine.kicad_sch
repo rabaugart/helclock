@@ -16,23 +16,25 @@
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
-			(property "Reference" "J"
-				(at 0 2.54 0)
+			(property "Reference" "J3"
+				(at 2.54 0.0001 0)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
+					(justify left)
 				)
 			)
-			(property "Value" "Screw_Terminal_01x02"
-				(at 0 -5.08 0)
+			(property "Value" "LED Output B"
+				(at 2.54 -2.5399 0)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
+					(justify left)
 				)
 			)
-			(property "Footprint" ""
+			(property "Footprint" "TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal"
 				(at 0 0 0)
 				(effects
 					(font
@@ -159,10 +161,10 @@
 						(type none)
 					)
 				)
-				(pin passive line
+				(pin power_out line
 					(at -5.08 0 0)
 					(length 3.81)
-					(name "Pin_1"
+					(name "LEDB-"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -177,10 +179,10 @@
 						)
 					)
 				)
-				(pin passive line
+				(pin power_out line
 					(at -5.08 -2.54 0)
 					(length 3.81)
-					(name "Pin_2"
+					(name "LEDB+"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -3192,7 +3194,7 @@
 	)
 	(text_box "Kabelfarben\n- Clock gelb\n- Data blau"
 		(exclude_from_sim no)
-		(at 227.33 26.67 0)
+		(at 207.01 26.67 0)
 		(size 24.13 21.59)
 		(margins 0.9525 0.9525 0.9525 0.9525)
 		(stroke
@@ -4386,6 +4388,16 @@
 		)
 		(uuid "831c710c-4564-4e13-951a-b3746ba43c78")
 	)
+	(label "Clock"
+		(at 162.56 72.39 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "8a13b366-8d83-4868-93dd-d5b94a127807")
+	)
 	(label "GPIO2{slash}SDA1"
 		(at 31.75 30.48 0)
 		(effects
@@ -4475,6 +4487,16 @@
 			(justify right bottom)
 		)
 		(uuid "be4b9f73-f8d2-4c28-9237-5d7e964636fa")
+	)
+	(label "Data"
+		(at 162.56 74.93 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "f03fa0cd-5b30-4c84-838a-33766cc08e9a")
 	)
 	(label "GPIO11{slash}SPI0.SCLK"
 		(at 31.75 55.88 0)
@@ -5012,10 +5034,9 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "a7a68a2e-a0a2-42a0-9e66-b9de3e47747d")
 		(property "Reference" "J2"
-			(at 194.31 39.3699 0)
+			(at 191.77 32.004 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5023,8 +5044,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Screw_Terminal_01x06"
-			(at 194.31 41.9099 0)
+		(property "Value" "LED Out A"
+			(at 194.818 46.482 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5230,10 +5251,9 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "facf8b5f-c11e-42d8-8a34-4acd3f463276")
 		(property "Reference" "J3"
-			(at 194.31 54.6099 0)
+			(at 191.008 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5241,8 +5261,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Screw_Terminal_01x02"
-			(at 194.31 57.1499 0)
+		(property "Value" "LED Out B"
+			(at 194.564 60.198 90)
 			(effects
 				(font
 					(size 1.27 1.27)

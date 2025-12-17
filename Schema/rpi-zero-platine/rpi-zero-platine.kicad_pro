@@ -515,7 +515,9 @@
     "meta": {
       "version": 4
     },
-    "net_colors": null,
+    "net_colors": {
+      "/Clock": "rgb(255, 250, 40)"
+    },
     "netclass_assignments": null,
     "netclass_patterns": []
   },

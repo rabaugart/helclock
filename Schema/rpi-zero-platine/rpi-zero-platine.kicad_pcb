@@ -151,9 +151,9 @@
 	(net 20 "unconnected-(J1-Pin_24-Pad24)")
 	(net 21 "unconnected-(J1-Pin_26-Pad26)")
 	(net 22 "unconnected-(J1-Pin_5-Pad5)")
-	(net 23 "Net-(J1-SPI0.SCLK)")
+	(net 23 "/Clock")
 	(net 24 "Net-(J1-Pin_15)")
-	(net 25 "Net-(J1-SPI0.MOSI)")
+	(net 25 "/Data")
 	(net 26 "Net-(J1-Pin_9)")
 	(footprint "Connector_PinSocket_2.54mm:PinSocket_2x13_P2.54mm_Vertical"
 		(layer "F.Cu")
@@ -597,7 +597,7 @@
 			(drill 1)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net 25 "Net-(J1-SPI0.MOSI)")
+			(net 25 "/Data")
 			(pinfunction "SPI0.MOSI")
 			(pintype "passive")
 			(uuid "f599ae6a-573d-4bb4-9b24-6942effc1b60")
@@ -641,7 +641,7 @@
 			(drill 1)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net 23 "Net-(J1-SPI0.SCLK)")
+			(net 23 "/Clock")
 			(pinfunction "SPI0.SCLK")
 			(pintype "passive")
 			(uuid "c200d730-f705-4d50-9bf1-75858e87c500")
@@ -709,7 +709,7 @@
 				)
 			)
 		)
-		(property "Value" "Screw_Terminal_01x02"
+		(property "Value" "LED Out B"
 			(at 2.54 5.72 90)
 			(layer "F.Fab")
 			(uuid "ba44d3fc-7242-4d29-b640-d388ae88e15f")
@@ -1042,8 +1042,8 @@
 			(remove_unused_layers no)
 			(roundrect_rratio 0.096154)
 			(net 1 "GND")
-			(pinfunction "Pin_1")
-			(pintype "passive")
+			(pinfunction "LEDB-")
+			(pintype "power_out")
 			(uuid "be04116d-b79c-4eaf-8132-5611587b8b91")
 		)
 		(pad "2" thru_hole circle
@@ -1053,8 +1053,8 @@
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net 2 "+5V")
-			(pinfunction "Pin_2")
-			(pintype "passive")
+			(pinfunction "LEDB+")
+			(pintype "power_out")
 			(uuid "4a231750-fdef-4823-a0bf-5584ed02a53b")
 		)
 		(embedded_fonts no)
@@ -1087,7 +1087,7 @@
 				)
 			)
 		)
-		(property "Value" "Screw_Terminal_01x06"
+		(property "Value" "LED Out A"
 			(at 12.7 5.72 90)
 			(layer "F.Fab")
 			(uuid "5c440e72-1b16-4c0e-8d5f-44c83a62cb62")
@@ -1576,7 +1576,7 @@
 			(drill 1.3)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net 23 "Net-(J1-SPI0.SCLK)")
+			(net 23 "/Clock")
 			(pinfunction "Pin_4")
 			(pintype "passive")
 			(uuid "a3f2818b-64e3-4329-bfec-0a8b41fae359")
@@ -1587,7 +1587,7 @@
 			(drill 1.3)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net 25 "Net-(J1-SPI0.MOSI)")
+			(net 25 "/Data")
 			(pinfunction "Pin_5")
 			(pintype "passive")
 			(uuid "be27ee63-30a3-4f02-abef-efa8d6411c18")
@@ -1970,16 +1970,6 @@
 		(layer "Dwgs.User")
 		(uuid "1c827ef1-a4b7-41e6-9843-2391dad87159")
 	)
-	(gr_line
-		(start 100 73)
-		(end 100 72.5)
-		(stroke
-			(width 0.1)
-			(type solid)
-		)
-		(layer "Dwgs.User")
-		(uuid "5003d121-afa9-4506-b1cb-3d24d05e3522")
-	)
 	(gr_rect
 		(start 75.6 65.4)
 		(end 190.8 103.6)
@@ -1990,6 +1980,102 @@
 		(fill no)
 		(layer "Edge.Cuts")
 		(uuid "f575b041-5672-4d53-a5f1-628147fb081a")
+	)
+	(gr_text "C"
+		(at 187 83.8 90)
+		(layer "F.SilkS")
+		(uuid "27972cff-a970-40be-983a-f23cd4759fb2")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+			(justify left bottom)
+		)
+	)
+	(gr_text "GND"
+		(at 187 89.4 90)
+		(layer "F.SilkS")
+		(uuid "3c94921f-80a0-44d3-9275-1898fff0b820")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+			(justify left bottom)
+		)
+	)
+	(gr_text "GND"
+		(at 80.4 71.4 270)
+		(layer "F.SilkS")
+		(uuid "83063599-8efd-43f3-afe6-c60ebbcceede")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+			(justify left bottom)
+		)
+	)
+	(gr_text "D"
+		(at 187.2 78.8 90)
+		(layer "F.SilkS")
+		(uuid "a13f7040-caac-4e5d-a3b6-dddbaf305766")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+			(justify left bottom)
+		)
+	)
+	(gr_text "V+"
+		(at 80.2 77.4 270)
+		(layer "F.SilkS")
+		(uuid "be1ffd7a-bc9d-4a11-83a0-f81fa4b61000")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+			(justify left bottom)
+		)
+	)
+	(gr_text "V+"
+		(at 187.4 73.4 90)
+		(layer "F.SilkS")
+		(uuid "ca45dcfc-7587-4f29-b833-ce08ed24cb96")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+			(justify left bottom)
+		)
+	)
+	(gr_text "V+"
+		(at 186.8 98.44 90)
+		(layer "F.SilkS")
+		(uuid "d97535bd-bc9c-431b-91b1-fd4bb4f05787")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+			(justify left bottom)
+		)
+	)
+	(gr_text "GND"
+		(at 186.8 94 90)
+		(layer "F.SilkS")
+		(uuid "ff259578-e208-400c-aeb0-d3dd0fa87a80")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+			(justify left bottom)
+		)
 	)
 	(segment
 		(start 178.4 92.92)

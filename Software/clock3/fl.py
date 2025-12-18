@@ -34,9 +34,9 @@ class Controler:
                     break
                 except queue.Empty:
                     pass
-                print(f"loop {cmd}, {coli}")
+                #print(f"loop {cmd}, {coli}")
                 self.spi.putcolors(coli)
-                time.sleep(1.0)
+                time.sleep(0.3)
         print("Controler stopped")
 
 con = Controler()

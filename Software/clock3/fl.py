@@ -1,11 +1,71 @@
 #!/usr/bin/env python3
 
+import queue, time, threading
+
 from flask import Flask
+
+import c3, c3.gen
+
+class Controler:
+    def __init__(self):
+        self.q = queue.Queue()
+        self.run_flag = False
+        self.generators = {
+            "rot": c3.gen.rotate([c3.GRÜN,c3.ROT,c3.ROT]),
+            "blau": c3.gen.rotate([c3.GRÜN,c3.BLAU,c3.BLAU]),
+        }
+        self.spi = c3.Spi()
+
+    def put(self,cmd):
+        self.q.put(cmd)
+
+    def stop(self):
+        self.run_flag = False
+
+    def run(self):
+        self.run_flag = True
+        cmd = "rot"
+        for coli in  self.generators[cmd]:
+            try:
+                cmd = self.q.get_nowait()
+                print(f"Received {cmd}")
+            except queue.Empty:
+                pass
+            print(f"loop {cmd}, {coli}")
+            self.spi.putcolors(coli)
+            if not self.run_flag:
+                break
+            time.sleep(1.0)
+        print("Controler stopped")
+
+con = Controler()
 app = Flask(__name__)
 
+page = """
+<html>
+<body>
+<div><a href="blau">blau</a></div>
+<div><a href="rot">rot</a></div>
+</body>
+</html>
+    """
 @app.route("/")
 def hello():
-    return "Hallo Welt"
+    return page
+
+@app.route("/blau")
+def blau():
+    con.put("blau")
+    return page
+
+@app.route("/rot")
+def rot():
+    con.put("rot")
+    return page
 
 if __name__ == "__main__":
-    app.run()
+    con_thread = threading.Thread(target=con.run)
+    con_thread.start()
+    app.run(host="0.0.0.0")
+    con.stop()
+    con_thread.join()

@@ -36,6 +36,8 @@ class Controler:
                     pass
                 #print(f"loop {cmd}, {coli}")
                 self.spi.putcolors(coli)
+                if not self.run_flag:
+                    break
                 time.sleep(0.3)
         print("Controler stopped")
 

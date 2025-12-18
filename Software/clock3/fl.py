@@ -13,6 +13,7 @@ class Controler:
         self.generators = {
             "blau": c3.gen.rotate([c3.GRÜN,c3.BLAU,c3.BLAU]),
             "rot": c3.gen.rotate([c3.GRÜN,c3.ROT,c3.ROT]),
+            "gruen": c3.gen.rotate([c3.GRÜN,c3.ROT,c3.ROT]),
         }
         self.spi = c3.Spi()
 
@@ -44,11 +45,11 @@ class Controler:
 con = Controler()
 app = Flask(__name__)
 
-page = """
+collist = "\n".join(f'<div><a href="/gen/{col}">{col}</a></div>' for col in con.generators.keys())
+page = f"""
 <html>
 <body>
-<div><a href="blau">blau</a></div>
-<div><a href="rot">rot</a></div>
+{collist}
 </body>
 </html>
     """
@@ -56,14 +57,9 @@ page = """
 def hello():
     return page
 
-@app.route("/blau")
-def blau():
-    con.put("blau")
-    return page
-
-@app.route("/rot")
-def rot():
-    con.put("rot")
+@app.route("/gen/<gname>")
+def gen(gname):
+    con.put(gname)
     return page
 
 if __name__ == "__main__":

@@ -11,8 +11,8 @@ class Controler:
         self.q = queue.Queue()
         self.run_flag = False
         self.generators = {
-            "rot": c3.gen.rotate([c3.GRÜN,c3.ROT,c3.ROT]),
             "blau": c3.gen.rotate([c3.GRÜN,c3.BLAU,c3.BLAU]),
+            "rot": c3.gen.rotate([c3.GRÜN,c3.ROT,c3.ROT]),
         }
         self.spi = c3.Spi()
 
@@ -24,18 +24,19 @@ class Controler:
 
     def run(self):
         self.run_flag = True
-        cmd = "rot"
-        for coli in  self.generators[cmd]:
-            try:
-                cmd = self.q.get_nowait()
-                print(f"Received {cmd}")
-            except queue.Empty:
-                pass
-            print(f"loop {cmd}, {coli}")
-            self.spi.putcolors(coli)
-            if not self.run_flag:
-                break
-            time.sleep(1.0)
+        cmd = "blau"
+        while self.run_flag:
+            gen = self.generators[cmd]
+            for coli in gen:
+                try:
+                    cmd = self.q.get_nowait()
+                    print(f"Received {cmd}")
+                    break
+                except queue.Empty:
+                    pass
+                print(f"loop {cmd}, {coli}")
+                self.spi.putcolors(coli)
+                time.sleep(1.0)
         print("Controler stopped")
 
 con = Controler()

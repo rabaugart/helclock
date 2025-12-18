@@ -13,7 +13,7 @@ class Controler:
         self.generators = {
             "blau": c3.gen.rotate([c3.GRÜN,c3.BLAU,c3.BLAU]),
             "rot": c3.gen.rotate([c3.GRÜN,c3.ROT,c3.ROT]),
-            "gruen": c3.gen.rotate([c3.GRÜN,c3.ROT,c3.ROT]),
+            "gruen": c3.gen.rotate([c3.GRÜN,c3.GRÜN,c3.ROT]),
         }
         self.spi = c3.Spi()
 

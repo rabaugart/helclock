@@ -47,10 +47,26 @@ app = Flask(__name__)
 
 collist = "\n".join(f'<div><a href="/gen/{col}">{col}</a></div>' for col in con.generators.keys())
 page = f"""
+<!DOCTYPE html>
 <html>
 <body>
 {collist}
+<div><input class="colslider" id="rot" type="range" min="0" max="255">Rot</input></div>
+<div><input class="colslider" id="grün" type="range" min="0" max="255">Grün</input></div>
+<div><input class="colslider" id="blau" type="range" min="0" max="255">Blau</input></div>
 </body>
+<script>
+function colchanged(event) {{
+    let t = event.target;
+    console.info("Changed ",t.id, t.valueAsNumber);
+}}
+document.onload = (e) => console.info("Test");
+let csls = document.getElementsByClassName("colslider")
+for (let i=0; i<csls.length;i++) {{
+    csls[i].onchange = colchanged;
+}}
+console.info("Hallo");
+</script>
 </html>
     """
 @app.route("/")
@@ -66,5 +82,6 @@ if __name__ == "__main__":
     con_thread = threading.Thread(target=con.run)
     con_thread.start()
     app.run(host="0.0.0.0")
+    #app.run(host="0.0.0.0")
     con.stop()
     con_thread.join()

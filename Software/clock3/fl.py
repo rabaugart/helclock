@@ -56,9 +56,12 @@ page = f"""
 <div><input class="colslider" id="blau" type="range" min="0" max="255">Blau</input></div>
 </body>
 <script>
+const socket = new WebSocket(`ws://${{document.location.hostname}}:8765`);
+
 function colchanged(event) {{
     let t = event.target;
     console.info("Changed ",t.id, t.valueAsNumber);
+    socket.send(`Changed ${{t.id}} ${{t.valueAsNumber}}`)
 }}
 document.onload = (e) => console.info("Test");
 let csls = document.getElementsByClassName("colslider")
@@ -78,10 +81,25 @@ def gen(gname):
     con.put(gname)
     return page
 
+import asyncio
+from websockets.asyncio.server import serve
+
+async def echo(websocket):
+    async for message in websocket:
+        print(message)
+        #await websocket.send(message)
+
+async def wsmain():
+    async with serve(echo, "localhost", 8765) as server:
+        await server.serve_forever()
+
 if __name__ == "__main__":
     con_thread = threading.Thread(target=con.run)
     con_thread.start()
+
+    ws_thread = threading.Thread(target=lambda:asyncio.run(wsmain()))
+    ws_thread.start()
+
     app.run(host="0.0.0.0")
-    #app.run(host="0.0.0.0")
     con.stop()
     con_thread.join()

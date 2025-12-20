@@ -3,6 +3,7 @@
 import queue, time, threading
 
 from flask import Flask
+from flask.templating import render_template
 
 import c3, c3.gen
 
@@ -13,7 +14,7 @@ class Controler:
         self.generators = {
             "blau": c3.gen.rotate([c3.GRÜN,c3.BLAU,c3.BLAU]),
             "rot": c3.gen.rotate([c3.GRÜN,c3.ROT,c3.ROT]),
-            "gruen": c3.gen.rotate([c3.GRÜN,c3.GRÜN,c3.ROT]),
+            "grün": c3.gen.rotate([c3.GRÜN,c3.GRÜN,c3.ROT]),
         }
         self.spi = c3.Spi()
 
@@ -45,41 +46,16 @@ class Controler:
 con = Controler()
 app = Flask(__name__)
 
-collist = "\n".join(f'<div><a href="/gen/{col}">{col}</a></div>' for col in con.generators.keys())
-page = f"""
-<!DOCTYPE html>
-<html>
-<body>
-{collist}
-<div><input class="colslider" id="rot" type="range" min="0" max="255">Rot</input></div>
-<div><input class="colslider" id="grün" type="range" min="0" max="255">Grün</input></div>
-<div><input class="colslider" id="blau" type="range" min="0" max="255">Blau</input></div>
-</body>
-<script>
-const socket = new WebSocket(`ws://${{document.location.hostname}}:8765`);
+COL_CONFIGS="rot grün blau".split()
 
-function colchanged(event) {{
-    let t = event.target;
-    console.info("Changed ",t.id, t.valueAsNumber);
-    socket.send(`Changed ${{t.id}} ${{t.valueAsNumber}}`)
-}}
-document.onload = (e) => console.info("Test");
-let csls = document.getElementsByClassName("colslider")
-for (let i=0; i<csls.length;i++) {{
-    csls[i].onchange = colchanged;
-}}
-console.info("Hallo");
-</script>
-</html>
-    """
 @app.route("/")
 def hello():
-    return page
+    return render_template("main.html",colconfigs=COL_CONFIGS)
 
 @app.route("/gen/<gname>")
 def gen(gname):
     con.put(gname)
-    return page
+    return render_template("main.html",colconfigs=COL_CONFIGS)
 
 import asyncio
 from websockets.asyncio.server import serve

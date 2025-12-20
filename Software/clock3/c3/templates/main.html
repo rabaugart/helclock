@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<script async src="/static/hclock.js"></script>
+<body>
+<h1>Helclock</h1>
+<ul>
+{% for item in colconfigs %}
+    <li><a href="/gen/{{ item }}">{{ item }}</a></li>
+{% endfor %}
+</ul>
+<div><input class="colslider" id="rot" type="range" min="0" max="255">Rot</input></div>
+<div><input class="colslider" id="grün" type="range" min="0" max="255">Grün</input></div>
+<div><input class="colslider" id="blau" type="range" min="0" max="255">Blau</input></div>
+</body>
+</html>

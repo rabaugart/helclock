@@ -16,8 +16,8 @@ class Controler:
         self.run_flag = False
         self.generators = {
             "blau": c3.gen.rotate([c3.GRÜN,c3.BLAU,c3.BLAU]),
-            "rot": c3.gen.rotate([c3.GRÜN,c3.ROT,c3.ROT]),
-            "grün": c3.gen.rotate([c3.GRÜN,c3.GRÜN,c3.ROT]),
+            "rot/grün": c3.gen.rotate([c3.GRÜN,c3.ROT,c3.ROT]),
+            "grün/rot": c3.gen.rotate([c3.GRÜN,c3.GRÜN,c3.ROT]),
         }
         self.spi = c3.Spi()
 
@@ -49,7 +49,7 @@ class Controler:
 con = Controler()
 app = Flask(__name__)
 
-COL_CONFIGS="rot grün blau".split()
+COL_CONFIGS=con.generators.keys()
 
 def render_main():
     return render_template("main.html",ws_server_port=WS_SERVER_PORT, colconfigs=COL_CONFIGS)

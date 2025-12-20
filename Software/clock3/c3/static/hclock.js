@@ -17,6 +17,11 @@ function set_status_message(status_msg) {
   m.innerHTML = status_msg;
 }
 
+function set_color_slider_value(id, value) {
+  let m = document.getElementById(id);
+  m.value = value;
+}
+
 function ondocload(event) {
   console.log("Starting hclock");
   let csls = document.getElementsByClassName("colslider");

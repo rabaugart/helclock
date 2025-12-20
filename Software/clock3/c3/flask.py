@@ -7,6 +7,9 @@ from flask.templating import render_template
 
 import c3, c3.gen
 
+# Konfiguration
+WS_SERVER_PORT = 8764
+
 class Controler:
     def __init__(self):
         self.q = queue.Queue()
@@ -48,14 +51,17 @@ app = Flask(__name__)
 
 COL_CONFIGS="rot grün blau".split()
 
+def render_main():
+    return render_template("main.html",ws_server_port=WS_SERVER_PORT, colconfigs=COL_CONFIGS)
+
 @app.route("/")
 def hello():
-    return render_template("main.html",colconfigs=COL_CONFIGS)
+    return render_main()
 
 @app.route("/gen/<gname>")
 def gen(gname):
     con.put(gname)
-    return render_template("main.html",colconfigs=COL_CONFIGS)
+    return render_main()
 
 import asyncio
 from websockets.asyncio.server import serve
@@ -68,7 +74,7 @@ async def echo(websocket):
 async def wsmain():
     # set this future to exit the server
     stop = asyncio.get_running_loop().create_future()
-    async with serve(echo, "0.0.0.0", 8765) as server:
+    async with serve(echo, "0.0.0.0", WS_SERVER_PORT) as server:
         await stop
 
 if __name__ == "__main__":

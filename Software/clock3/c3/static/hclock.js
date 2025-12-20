@@ -1,4 +1,6 @@
-const socket = new WebSocket(`ws://${document.location.hostname}:8765`);
+const socket = new WebSocket(
+  `ws://${document.location.hostname}:${ws_server_port}`,
+);
 
 function colchanged(event) {
   let t = event.target;

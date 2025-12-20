@@ -63,7 +63,7 @@ from websockets.asyncio.server import serve
 async def echo(websocket):
     async for message in websocket:
         print(message)
-        #await websocket.send(message)
+        await websocket.send(message)
 
 async def wsmain():
     # set this future to exit the server

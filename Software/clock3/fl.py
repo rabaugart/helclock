@@ -90,8 +90,10 @@ async def echo(websocket):
         #await websocket.send(message)
 
 async def wsmain():
+    # set this future to exit the server
+    stop = asyncio.get_running_loop().create_future()
     async with serve(echo, "0.0.0.0", 8765) as server:
-        await server.serve_forever()
+        await stop
 
 if __name__ == "__main__":
     con_thread = threading.Thread(target=con.run)

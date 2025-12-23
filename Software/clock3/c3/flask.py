@@ -2,6 +2,10 @@
 
 import queue, time, threading
 
+# Flask docs
+# https://flask.palletsprojects.com/en/stable/
+# oder auch Quart
+# https://quart.palletsprojects.com/en/latest/
 from flask import Flask
 from flask.templating import render_template
 
@@ -64,6 +68,10 @@ def gen(gname):
     return render_main()
 
 import asyncio
+#
+# Docs zu websockets
+# https://websockets.readthedocs.io/en/stable/
+#
 from websockets.asyncio.server import serve
 
 async def echo(websocket):

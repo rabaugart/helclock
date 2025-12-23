@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<script>
+let ws_server_port = {{ ws_server_port }};
+</script>
+<script async src="/static/hclock.js"></script>
+<link href="/static/style.css" rel="stylesheet" />
+<body>
+<h1>Helclock</h1>
+<ul>
+{% for item in colconfigs %}
+    <li><a href="/gen/{{ item }}">{{ item }}</a></li>
+{% endfor %}
+</ul>
+<div>
+{% for item in colconfigs %}
+    <button class="colbutton" id="{{ item }}">{{ item }}</button>
+{% endfor %}
+</div>
+<div><input class="colslider" id="rot" type="range" min="0" max="255">Rot</input></div>
+<div><input class="colslider" id="grün" type="range" min="0" max="255">Grün</input></div>
+<div><input class="colslider" id="blau" type="range" min="0" max="255">Blau</input></div>
+<div><span id="status_message"></span></div>
+</body>
+</html>

@@ -2,17 +2,17 @@
     const ws = new WebSocket(`ws://${location.host}/ws`);
 
     ws.addEventListener("message", function (event) {
-        const li = document.createElement("li");
-        li.appendChild(document.createTextNode(event.data));
-        document.getElementById("messages").appendChild(li);
+        //const li = document.createElement("li");
+        //li.appendChild(document.createTextNode(event.data));
+        document.getElementById("status").innerText = event.data;
     });
 
     function send(event) {
-        const message = new FormData(event.target).get("message");
+        const message = `msg1 ${event.target.id}`;
+        console.log(`Sending ${message}`);
         if (message) {
             ws.send(message);
         }
-        event.target.reset();
         return false;
     }
 </script>
@@ -21,5 +21,7 @@
     <h1>Clock</h1>
 </div>
 <div id="button_frame">
-    <p>test</p>
+    <div id="status">test</div>
+    <button id="b1" onclick="return send(event);">B1</button>
+    <button id="b2" onclick="return send(event);">B2</button>
 </div>

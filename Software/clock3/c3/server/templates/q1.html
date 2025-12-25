@@ -1,27 +1,9 @@
-<script type="text/javascript">
-    const ws = new WebSocket(`ws://${location.host}/ws`);
-
-    ws.addEventListener("message", function (event) {
-        //const li = document.createElement("li");
-        //li.appendChild(document.createTextNode(event.data));
-        document.getElementById("status").innerText = event.data;
-    });
-
-    function send(event) {
-        const message = `msg1 ${event.target.id}`;
-        console.log(`Sending ${message}`);
-        if (message) {
-            ws.send(message);
-        }
-        return false;
-    }
-</script>
+<link href="/static/style.css" rel="stylesheet" />
+<script async src="/static/hclockq.js"></script>
 
 <div>
     <h1>Clock</h1>
 </div>
-<div id="button_frame">
-    <div id="status">test</div>
-    <button id="b1" onclick="return send(event);">B1</button>
-    <button id="b2" onclick="return send(event);">B2</button>
-</div>
+<div id="button_frame"></div>
+<div id="slider"></div>
+<div id="status">test</div>

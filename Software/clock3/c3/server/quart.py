@@ -1,4 +1,7 @@
-import asyncio
+"""
+Nimm shift-cmd-r/chromium oder option-cmd-r/safari, um Skripte ohne Cache neu zu laden
+"""
+import asyncio, signal
 from quart import Quart, render_template, websocket
 
 from .broker import Broker
@@ -18,13 +21,16 @@ async def _receive() -> None:
 
 @app.websocket("/ws")
 async def ws() -> None:
+    task = None
     try:
         task = asyncio.ensure_future(_receive())
         async for message in broker.subscribe():
             await websocket.send(message)
     finally:
-        task.cancel()
-        await task
+        if task:
+            task.cancel()
+            await task
 
 if __name__ == "__main__":
     app.run()
+    print("Gestoppt")

@@ -16,3 +16,6 @@ from .xtra import XWTest
 from .test import T3
 
 from .generator import TestGen
+
+from .server.controler import ConTest
+from .server.messages import MsgTest

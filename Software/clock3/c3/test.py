@@ -77,10 +77,3 @@ class T3(unittest.TestCase):
 def testiter(n):
     for i in [c3.ROT,c3.GRÜN]*n:
         yield [i,i]
-
-if __name__ == "__main__":
-    tl = unittest.TestLoader()
-    #tl.loadTestsFromModule(c3.hclock)
-    #tl.discover(".")
-    tl.loadTestsFromName("c3.hclock")
-    unittest.main(testLoader=tl,verbosity=0)

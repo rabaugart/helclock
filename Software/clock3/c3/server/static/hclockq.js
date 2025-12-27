@@ -6,6 +6,14 @@ class Controler {
 
   button_callback(pol) {
     console.log("Button callback", pol);
+    if (ws.readyState == WebSocket.OPEN) {
+      const m = {
+        mtype: MT_GENERATOR_SELECT,
+        selected_generator: pol,
+      };
+      console.log(`Sending ${m}`);
+      ws.send(JSON.stringify(m));
+    }
     for (const pi of this.policies) {
       const bi = document.getElementById(`polbu-${pi}`);
       bi.className = pi == pol ? "sel" : "";
@@ -29,21 +37,9 @@ class Controler {
 const con = new Controler();
 
 ws.addEventListener("message", function (event) {
-  let bu = document.createElement("button");
   console.log("Got", event.data);
-  bu.appendChild(document.createTextNode(event.data));
   document.getElementById("status").innerText = `c ${event.data}`;
-  document.getElementById("button_frame").appendChild(bu);
 });
-
-function send(event) {
-  const message = `msg1 ${event.target.id}`;
-  console.log(`Sending ${message}`);
-  if (message) {
-    ws.send(message);
-  }
-  return false;
-}
 
 function col_slider_changed(sect, col, value) {
   console.log("Ändere", sect, col, value, con.selpol);

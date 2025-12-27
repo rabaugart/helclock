@@ -1,4 +1,4 @@
-import functools
+import functools, itertools
 
 class Color:
     def __init__(self,r,g,b):

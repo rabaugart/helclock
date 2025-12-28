@@ -24,12 +24,13 @@ async def _receive() -> None:
         if mtype == MTYPES.STARTUP.name:
             # Startup message wird mit status beantwortet
             print("Handling startup")
-            a = con.status.msg_dict()
-            a[MKEYS.mtype.name] = MTYPES.STATUS.name
-            await websocket.send(json.dumps(a))
         else:
             await con.handle_msg(message)
-            await broker.publish(message)
+            #await broker.publish(message)
+        # Erzeuge und publishe status-Nachricht
+        a = con.status.msg_dict()
+        a[MKEYS.mtype.name] = MTYPES.STATUS.name
+        await broker.publish(json.dumps(a))
 
 @app.websocket("/ws")
 async def ws() -> None:

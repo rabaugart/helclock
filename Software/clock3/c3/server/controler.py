@@ -29,6 +29,7 @@ class Controler:
                     gname = d[MKEYS.selected_generator.name]
                     self.gen_no = list(i for (i,gi) in enumerate(self.status.generators)
                         if gi.name == gname)[0]
+                    self.status.selected_generator = gname
                     print(f"Neuer Generator {gname}/{self.gen_no}")
                 except Exception as e:
                     print(f"Error {e}")

@@ -1,9 +1,10 @@
-import asyncio, json
+import asyncio, json, itertools
 from enum import Enum
 import unittest
 
 
-from .messages import MKEYS, MTYPES
+from .messages import MKEYS, MTYPES, COL_SECT
+from c3.color import VORDEFINIERTE_FARBEN
 
 class Controler:
     def __init__(self):
@@ -56,17 +57,27 @@ class Controler:
 
 GENERATOR_TYPE = Enum("PT","Uhr Test")
 
+GENTYPE_COLMAP = {
+    GENERATOR_TYPE.Uhr : [COL_SECT.Vordergrund,COL_SECT.Hintergrund],
+    GENERATOR_TYPE.Test : [COL_SECT.Vordergrund,COL_SECT.Mittelfarbe,COL_SECT.Hintergrund],
+}
+
 class AGenerator(dict):
     "Async generator"
-    def __init__(self,name,polt):
+
+    INIT = itertools.cycle(VORDEFINIERTE_FARBEN)
+
+    def __init__(self,name,gent):
         self.name = name
-        self.generator_type = polt
+        self.generator_type = gent
         self.count = 0
+        self.farbmap = dict(zip( GENTYPE_COLMAP[self.generator_type], self.INIT))
 
     def msg_dict(self):
         return {
-            MKEYS.generator_name : self.name,
-            MKEYS.generator_type : self.generator_type.name,
+            MKEYS.generator_name.name : self.name,
+            MKEYS.generator_type.name : self.generator_type.name,
+            MKEYS.colors.name : dict( (si.name,ci.msg_dict()) for (si,ci) in self.farbmap.items()),
         }
 
     def __aiter__(self):
@@ -92,8 +103,8 @@ class ConStatus:
 
     def msg_dict(self):
         return {
-            MKEYS.generators : list( i.msg_dict() for i in self.generators ),
-            MKEYS.selected_generator: self.selected_generator,
+            MKEYS.generators.name : list( i.msg_dict() for i in self.generators ),
+            MKEYS.selected_generator.name: self.selected_generator,
         }
 
 class ConTest(unittest.TestCase):
@@ -101,5 +112,7 @@ class ConTest(unittest.TestCase):
     def testMsg(self):
         c = ConStatus()
         ks = c.msg_dict().keys()
-        self.assertIn(MKEYS.generators, ks)
-        self.assertIn(MKEYS.selected_generator, ks)
+        self.assertIn(MKEYS.generators.name, ks)
+        self.assertIn(MKEYS.selected_generator.name, ks)
+        self.assertGreater( len(json.dumps(c.msg_dict())),50)
+        #self.assertEqual(json.dumps(c.msg_dict()),"")

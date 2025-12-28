@@ -1,7 +1,7 @@
 """
 Nimm shift-cmd-r/chromium oder option-cmd-r/safari, um Skripte ohne Cache neu zu laden
 """
-import asyncio
+import asyncio, json
 from quart import Quart, render_template, websocket
 
 from .broker import Broker
@@ -19,8 +19,17 @@ async def index():
 async def _receive() -> None:
     while True:
         message = await websocket.receive()
-        await con.handle_msg(message)
-        await broker.publish(message)
+        d = json.loads(message)
+        mtype = d[MKEYS.mtype.name]
+        if mtype == MTYPES.STARTUP.name:
+            # Startup message wird mit status beantwortet
+            print("Handling startup")
+            a = con.status.msg_dict()
+            a[MKEYS.mtype.name] = MTYPES.STATUS.name
+            await websocket.send(json.dumps(a))
+        else:
+            await con.handle_msg(message)
+            await broker.publish(message)
 
 @app.websocket("/ws")
 async def ws() -> None:

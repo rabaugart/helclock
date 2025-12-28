@@ -6,6 +6,8 @@ import unittest
 MTYPES = Enum("MT","STARTUP STATUS GENERATOR_SELECT COL_UPDATE")
 MKEYS = Enum("MK","mtype selected_generator generators generator_name generator_type colors")
 
+COL_SECT = Enum("CS","Vordergrund Hintergrund Mittelfarbe")
+
 def mtypes_js():
     return "\n".join( f'const MT_{i.name} = "{i.name}";' for i in MTYPES)
 

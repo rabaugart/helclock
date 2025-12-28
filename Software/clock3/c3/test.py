@@ -29,6 +29,7 @@ class T3(unittest.TestCase):
         self.assertEqual((c3.ROT*-1.5).b,bytearray([0,0,0]))
         self.assertEqual((c3.WEISS*0.5).b,bytearray([127,127,127]))
         self.assertEqual((c3.WEISS*"0.5").b,bytearray([127,127,127]))
+        self.assertEqual(c3.WEISS.msg_dict(),{"rot":255,"grün":255,"blau":255})
         self.assertRaises(ValueError,lambda: c3.ROT*"hallo")
         self.assertEqual(c3.ternär_colors(0),[c3.ROT])
         self.assertEqual(c3.ternär_colors(10),[c3.GRÜN,c3.ROT,c3.GRÜN])

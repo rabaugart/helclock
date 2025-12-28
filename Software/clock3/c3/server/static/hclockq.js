@@ -7,10 +7,10 @@ class Controler {
   button_callback(pol) {
     console.log("Button callback", pol);
     if (ws.readyState == WebSocket.OPEN) {
-      const m = {
-        mtype: MT_GENERATOR_SELECT,
-        selected_generator: pol,
-      };
+      const m = {};
+      m[MK_mtype] = MT_GENERATOR_SELECT;
+      m[MK_selected_generator] = pol;
+
       console.log(`Sending ${m}`);
       ws.send(JSON.stringify(m));
     }
@@ -37,9 +37,22 @@ class Controler {
 const con = new Controler();
 
 ws.addEventListener("message", function (event) {
-  console.log("Got", event.data);
-  document.getElementById("status").innerText = `c ${event.data}`;
+  const obj = JSON.parse(event.data);
+  const mt = obj[MK_mtype];
+  if (mt == MT_STATUS) {
+    document.getElementById("status").innerText = "Status erhalten";
+  } else {
+    console.log("Got", event.data);
+  }
 });
+
+function send_startup(e) {
+  const m = {};
+  m[MK_mtype] = MT_STARTUP;
+  ws.send(JSON.stringify(m));
+}
+
+ws.onopen = send_startup;
 
 function col_slider_changed(sect, col, value) {
   console.log("Ändere", sect, col, value, con.selpol);

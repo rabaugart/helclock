@@ -7,6 +7,7 @@ from c3 import Spi
 from .messages import MKEYS, MTYPES, COL_SECT
 from .broker import Broker
 from c3.color import VORDEFINIERTE_FARBEN, colors_bytes
+from c3.gen import rotate_list
 
 class Controler:
     def __init__(self,spi=None):
@@ -100,11 +101,12 @@ class TestGen:
 
     def gen(self):
         count = 0
+        l = [ self.farbmap[COL_SECT.Vordergrund],
+            self.farbmap[COL_SECT.Mittelfarbe],
+            self.farbmap[COL_SECT.Hintergrund]]
         while True:
-            yield colors_bytes([
-                self.farbmap[COL_SECT.Vordergrund],
-                self.farbmap[COL_SECT.Mittelfarbe],
-                self.farbmap[COL_SECT.Hintergrund]]),0.1 if count < 1 else 5.0
+            yield colors_bytes(l),0.1 if count < 1 else 1.0
+            l = rotate_list(l)
             count += 1
 
 GENTYPE_COLMAP = {

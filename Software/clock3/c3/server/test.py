@@ -39,8 +39,8 @@ class ControlerTest(unittest.TestCase):
         spi = MockSpi()
         con = Controler(spi)
         asyncio.run(self.startStop(con))
-        self.assertEqual(len(spi.received),1)
-        self.assertEqual(spi.received[0],"Clock")
+        self.assertEqual(len(spi.received),2)
+        self.assertEqual(len(spi.received[0]),3*3)
 
     async def switch(self,con,recv):
         t = asyncio.create_task(con.run())
@@ -62,9 +62,9 @@ class ControlerTest(unittest.TestCase):
         con = Controler(spi)
         recv = MockReceiver(con)
         asyncio.run(self.switch(con,recv))
-        self.assertEqual(len(spi.received),2)
-        self.assertEqual(spi.received[0],"Clock")
-        self.assertEqual(spi.received[1],"Clock")
+        self.assertEqual(len(spi.received),5)
+        self.assertEqual(len(spi.received[0]),3*3)
+        self.assertEqual(len(spi.received[1]),3*3)
         self.assertEqual(len(recv.msgs),4)
         self.assertEqual(recv.status_counter,4)
         self.assertEqual(recv.selected_generators,"A C B B".split())

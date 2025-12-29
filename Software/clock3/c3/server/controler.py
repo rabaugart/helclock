@@ -43,7 +43,7 @@ class Controler:
         print(f"Starting {self.gen_no}")
         await self.publish_status()
         async for f in self.selected_generator():
-            print("Controler",f)
+            #print("Controler",f)
             self.spi.putbytes(f)
         print("Generator stopped")
 

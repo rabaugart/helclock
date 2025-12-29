@@ -86,22 +86,26 @@ class ClockGen:
         self.farbmap = farbmap
 
     def gen(self):
+        count = 0
         while True:
             yield colors_bytes([
                 self.farbmap[COL_SECT.Vordergrund],
                 self.farbmap[COL_SECT.Hintergrund],
-                self.farbmap[COL_SECT.Vordergrund]]),5.0
+                self.farbmap[COL_SECT.Vordergrund]]), 0.1 if count < 1 else 5.0
+            count += 1
 
 class TestGen:
     def __init__(self,farbmap):
         self.farbmap = farbmap
 
     def gen(self):
+        count = 0
         while True:
             yield colors_bytes([
                 self.farbmap[COL_SECT.Vordergrund],
                 self.farbmap[COL_SECT.Mittelfarbe],
-                self.farbmap[COL_SECT.Hintergrund]]),1.0
+                self.farbmap[COL_SECT.Hintergrund]]),0.1 if count < 1 else 5.0
+            count += 1
 
 GENTYPE_COLMAP = {
     GENERATOR_TYPE.Uhr : ([COL_SECT.Vordergrund,COL_SECT.Hintergrund],ClockGen),
@@ -116,7 +120,6 @@ class AGenerator(dict):
     def __init__(self,name,gent):
         self.name = name
         self.generator_type = gent
-        self.count = 0
         cols,genclass = GENTYPE_COLMAP[self.generator_type]
         self.farbmap = dict(zip( cols, self.INIT))
         self.genclass = genclass
@@ -139,7 +142,6 @@ class AGenerator(dict):
             await asyncio.sleep(s)
         except asyncio.CancelledError:
             raise StopAsyncIteration
-        self.count += 1
         return b
 
 class ConStatus:

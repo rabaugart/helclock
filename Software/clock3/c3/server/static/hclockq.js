@@ -35,7 +35,9 @@ class Controler {
             const div = document.createElement("div");
             const sptext = document.createElement("span");
             sptext.appendChild(document.createTextNode(colseci));
+            sptext.className = "farb-slider";
             div.appendChild(sptext);
+            div.className = "div-slider";
             for (const ci of ["rot", "grün", "blau"]) {
               let sp = document.createElement("span");
               //sp.appendChild(document.createTextNode(ci));

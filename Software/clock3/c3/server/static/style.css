@@ -17,8 +17,14 @@ button.sel {
     border-color: hsl(13 80% 61%);
 }
 
+div.div-slider {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 1fr 2fr 2fr 2fr;
+}
 span.farb-slider {
     padding: 5pt;
+    margin: 5pt;
 }
 
 span.rot-slider {

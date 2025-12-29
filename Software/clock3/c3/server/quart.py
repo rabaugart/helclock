@@ -52,11 +52,12 @@ async def stopper(t):
         count -= 1
     t.cancel()
 
-con = Controler()
+con = Controler(broker)
 
 async def main():
     t = asyncio.create_task(app.run_task())
     c = asyncio.create_task(con.run())
+    #b = asyncio.create_task(broker.sender())
     #s = asyncio.create_task(stopper(t))
     try:
         await t

@@ -3,14 +3,18 @@ from enum import Enum
 import unittest
 
 
+from c3 import Spi
 from .messages import MKEYS, MTYPES, COL_SECT
+from .broker import Broker
 from c3.color import VORDEFINIERTE_FARBEN
 
 class Controler:
-    def __init__(self):
+    def __init__(self,spi=None):
+        self.broker = Broker()
         self.status = ConStatus()
-        self.msg_queue = asyncio.Queue()
+        self.msg_queue = None
         self.gen_no = 0
+        self.spi = spi if spi else Spi()
 
     async def handle_msg(self,m):
         await self.msg_queue.put(m)
@@ -18,7 +22,7 @@ class Controler:
     def status(self):
         return self.status
 
-    def update_status(self,m):
+    async def update_status(self,m):
         "Message erhalten -> Status ändern"
         try:
             d = json.loads(m)
@@ -39,28 +43,79 @@ class Controler:
         except Exception as e:
             print(f"Error {e}")
             self.gen_no = 0
+        d = self.status.msg_dict()
+        d[MKEYS.mtype.name] = MTYPES.STATUS.name
+        await self.broker.publish(json.stringify(d))
+
+    async def handle_command(self,cmd):
+        await self.msg_queue.put(cmd)
+
+    def process_command(self,cmd):
+        if cmd.mtype == MTYPES.GENERATOR_SELECT:
+            l = list( (i,g.name)
+                for (i,g) in enumerate(self.status.generators) if g.name == cmd.selected_generator )
+            assert( len(l)== 1)
+            self.gen_no = l[0][0]
+            self.status.selected_generator = l[0][1]
+        if cmd.mtype == MTYPES.STARTUP:
+            pass
+
+    def selected_generator(self):
+        return self.status.generators[self.gen_no]
+
+    async def generate(self):
+        print(f"Starting {self.gen_no}")
+        await self.publish_status()
+        async for f in self.selected_generator():
+            print("Controler",f)
+            self.spi.putbytes(f)
+        print("Generator stopped")
 
     async def run(self):
+        if not self.msg_queue:
+            self.msg_queue = asyncio.Queue()
         running = True
+        gentask = asyncio.create_task(self.generate())
         while running:
-            print(f"Using {self.gen_no}")
-            async for f in self.status.generators[self.gen_no]:
-                print("Controler",f)
-                try:
-                    m = self.msg_queue.get_nowait()
-                    print(f"Queue: {m}")
-                    self.update_status(m)
-                    break
-                except asyncio.QueueEmpty:
-                    pass
-            else:
-                running = False
+            try:
+                cmd = await self.msg_queue.get()
+                if gentask:
+                    gentask.cancel()
+                    await gentask
+                self.process_command(cmd)
+                gentask = asyncio.create_task(self.generate())
+                self.msg_queue.task_done()
+                #await self.update_status(m)
+            except asyncio.CancelledError:
+                print("Controler stopped")
+                break
+        try:
+            await self.msg_queue.join()
+        except asyncio.CancelledError:
+            pass
+
+    async def publish_status(self):
+        d = self.status.msg_dict()
+        d[MKEYS.mtype.name] = MTYPES.STATUS.name
+        await self.broker.publish(json.dumps(d))
+
+    def subscribe(self):
+        return self.broker.subscribe()
+
 
 GENERATOR_TYPE = Enum("PT","Uhr Test")
 
+class ClockGen:
+    def __init__(self,farbmap):
+        self.farbmap = farbmap
+
+class TestGen:
+    def __init__(self,farbmap):
+        self.farbmap = farbmap
+
 GENTYPE_COLMAP = {
-    GENERATOR_TYPE.Uhr : [COL_SECT.Vordergrund,COL_SECT.Hintergrund],
-    GENERATOR_TYPE.Test : [COL_SECT.Vordergrund,COL_SECT.Mittelfarbe,COL_SECT.Hintergrund],
+    GENERATOR_TYPE.Uhr : ([COL_SECT.Vordergrund,COL_SECT.Hintergrund],ClockGen),
+    GENERATOR_TYPE.Test : ([COL_SECT.Vordergrund,COL_SECT.Mittelfarbe,COL_SECT.Hintergrund],TestGen),
 }
 
 class AGenerator(dict):
@@ -72,7 +127,9 @@ class AGenerator(dict):
         self.name = name
         self.generator_type = gent
         self.count = 0
-        self.farbmap = dict(zip( GENTYPE_COLMAP[self.generator_type], self.INIT))
+        cols,genclass = GENTYPE_COLMAP[self.generator_type]
+        self.farbmap = dict(zip( cols, self.INIT))
+        self.gen = genclass(self.farbmap)
 
     def msg_dict(self):
         return {

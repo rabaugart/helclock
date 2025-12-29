@@ -1,4 +1,4 @@
-
+import json
 from enum import Enum
 
 import unittest
@@ -17,7 +17,48 @@ def mkeys_js():
 def msg_script_consts():
     return mtypes_js() + "\n" + mkeys_js()
 
+class Command:
+
+    def __init__(self):
+        self.mtype = None
+        self.selected_generator = None
+
+    @staticmethod
+    def parse_json(msg):
+        d = json.loads(msg)
+        cmd = Command()
+        cmd.mtype = MTYPES[d[MKEYS.mtype.name]]
+        cmd.selected_generator = d[MKEYS.selected_generator.name]
+        return cmd
+
+    @staticmethod
+    def select_generator(gname):
+        c = Command()
+        c.mtype = MTYPES.GENERATOR_SELECT
+        c.selected_generator = gname
+        return c
+
+    @staticmethod
+    def startup():
+        c = Command()
+        c.mtype = MTYPES.STARTUP
+        return c
+
+    def json(self):
+        return json.dumps({
+            MKEYS.mtype.name: self.mtype.name,
+            MKEYS.selected_generator.name: self.selected_generator,
+        })
+
 class MsgTest(unittest.TestCase):
+
+    def testCommand(self):
+        c = Command.parse_json('{ "mtype": "GENERATOR_SELECT", "selected_generator":"A"}')
+        self.assertEqual(c.mtype, MTYPES.GENERATOR_SELECT)
+        self.assertEqual(c.selected_generator,"A")
+        j2 = Command.select_generator("X").json()
+        c2 = Command.parse_json(j2)
+        self.assertEqual(c2.selected_generator,"X")
 
     def testMT(self):
         self.assertEqual(mtypes_js(),"""const MT_STARTUP = "STARTUP";

@@ -6,7 +6,7 @@ class Broker:
         self.connections = set()
 
     async def publish(self, message: str) -> None:
-        print(f"Publishing {message}")
+        #print(f"Publishing {message}")
         for connection in self.connections:
             await connection.put(message)
 

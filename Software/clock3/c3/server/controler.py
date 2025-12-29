@@ -6,7 +6,7 @@ import unittest
 from c3 import Spi
 from .messages import MKEYS, MTYPES, COL_SECT
 from .broker import Broker
-from c3.color import VORDEFINIERTE_FARBEN
+from c3.color import VORDEFINIERTE_FARBEN, colors_bytes
 
 class Controler:
     def __init__(self,spi=None):
@@ -87,7 +87,10 @@ class ClockGen:
 
     def gen(self):
         while True:
-            yield "Clock",5.0
+            yield colors_bytes([
+                self.farbmap[COL_SECT.Vordergrund],
+                self.farbmap[COL_SECT.Hintergrund],
+                self.farbmap[COL_SECT.Vordergrund]]),5.0
 
 class TestGen:
     def __init__(self,farbmap):
@@ -95,7 +98,10 @@ class TestGen:
 
     def gen(self):
         while True:
-            yield "Test",5.0
+            yield colors_bytes([
+                self.farbmap[COL_SECT.Vordergrund],
+                self.farbmap[COL_SECT.Mittelfarbe],
+                self.farbmap[COL_SECT.Hintergrund]]),1.0
 
 GENTYPE_COLMAP = {
     GENERATOR_TYPE.Uhr : ([COL_SECT.Vordergrund,COL_SECT.Hintergrund],ClockGen),
@@ -113,7 +119,8 @@ class AGenerator(dict):
         self.count = 0
         cols,genclass = GENTYPE_COLMAP[self.generator_type]
         self.farbmap = dict(zip( cols, self.INIT))
-        self.gen = genclass(self.farbmap).gen()
+        self.genclass = genclass
+        self.gen = None
 
     def msg_dict(self):
         return {
@@ -123,6 +130,7 @@ class AGenerator(dict):
         }
 
     def __aiter__(self):
+        self.gen = self.genclass(self.farbmap).gen()
         return self
 
     async def __anext__(self):

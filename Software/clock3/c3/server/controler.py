@@ -99,8 +99,9 @@ class Controler:
         d[MKEYS.mtype.name] = MTYPES.STATUS.name
         await self.broker.publish(json.dumps(d))
 
-    def subscribe(self):
-        return self.broker.subscribe()
+    async def subscribe(self):
+        async for m in self.broker.subscribe():
+            yield m
 
 
 GENERATOR_TYPE = Enum("PT","Uhr Test")

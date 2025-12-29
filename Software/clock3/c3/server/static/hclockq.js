@@ -104,6 +104,7 @@ function send_startup(e) {
   const m = {};
   m[MK_mtype] = MT_STARTUP;
   ws.send(JSON.stringify(m));
+  console.log("Startup sent");
 }
 
 ws.onopen = send_startup;

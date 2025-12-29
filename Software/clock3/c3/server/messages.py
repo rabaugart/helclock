@@ -28,7 +28,9 @@ class Command:
         d = json.loads(msg)
         cmd = Command()
         cmd.mtype = MTYPES[d[MKEYS.mtype.name]]
-        cmd.selected_generator = d[MKEYS.selected_generator.name]
+        try:
+            cmd.selected_generator = d[MKEYS.selected_generator.name]
+        except: pass
         return cmd
 
     @staticmethod
@@ -49,6 +51,9 @@ class Command:
             MKEYS.mtype.name: self.mtype.name,
             MKEYS.selected_generator.name: self.selected_generator,
         })
+
+    def __str__(self):
+        return f"Cmd({self.mtype.name}/{self.selected_generator})"
 
 class MsgTest(unittest.TestCase):
 

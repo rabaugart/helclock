@@ -4,13 +4,10 @@ Nimm shift-cmd-r/chromium oder option-cmd-r/safari, um Skripte ohne Cache neu zu
 import asyncio, json
 from quart import Quart, render_template, websocket
 
-from .broker import Broker
-from .messages import MTYPES, MKEYS, msg_script_consts
+from .messages import MTYPES, MKEYS, msg_script_consts, Command
 from .controler import Controler
 
 app = Quart(__name__)
-
-broker = Broker()
 
 @app.route('/')
 async def index():
@@ -19,25 +16,19 @@ async def index():
 async def _receive() -> None:
     while True:
         message = await websocket.receive()
-        d = json.loads(message)
-        mtype = d[MKEYS.mtype.name]
-        if mtype == MTYPES.STARTUP.name:
-            # Startup message wird mit status beantwortet
-            print("Handling startup")
-        else:
-            await con.handle_msg(message)
-            #await broker.publish(message)
-        # Erzeuge und publishe status-Nachricht
-        a = con.status.msg_dict()
-        a[MKEYS.mtype.name] = MTYPES.STATUS.name
-        await broker.publish(json.dumps(a))
+        try:
+            cmd = Command.parse_json(message)
+            print("WS received", cmd)
+            await con.handle_command(cmd)
+        except Exception as e:
+            print("Error ws receiving",e)
 
 @app.websocket("/ws")
 async def ws() -> None:
     task = None
     try:
         task = asyncio.ensure_future(_receive())
-        async for message in broker.subscribe():
+        async for message in con.subscribe():
             await websocket.send(message)
     finally:
         if task:
@@ -52,12 +43,11 @@ async def stopper(t):
         count -= 1
     t.cancel()
 
-con = Controler(broker)
+con = Controler()
 
 async def main():
     t = asyncio.create_task(app.run_task())
     c = asyncio.create_task(con.run())
-    #b = asyncio.create_task(broker.sender())
     #s = asyncio.create_task(stopper(t))
     try:
         await t

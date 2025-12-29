@@ -16,37 +16,6 @@ class Controler:
         self.gen_no = 0
         self.spi = spi if spi else Spi()
 
-    async def handle_msg(self,m):
-        await self.msg_queue.put(m)
-
-    def status(self):
-        return self.status
-
-    async def update_status(self,m):
-        "Message erhalten -> Status ändern"
-        try:
-            d = json.loads(m)
-            mtype = d[MKEYS.mtype.name]
-            print(f"Received {mtype}: {d}")
-            if mtype == MTYPES.GENERATOR_SELECT.name:
-                try:
-                    gname = d[MKEYS.selected_generator.name]
-                    self.gen_no = list(i for (i,gi) in enumerate(self.status.generators)
-                        if gi.name == gname)[0]
-                    self.status.selected_generator = gname
-                    print(f"Neuer Generator {gname}/{self.gen_no}")
-                except Exception as e:
-                    print(f"Error {e}")
-                    self.gen_no = 0
-            else:
-                print(f"Received unhandled {d}")
-        except Exception as e:
-            print(f"Error {e}")
-            self.gen_no = 0
-        d = self.status.msg_dict()
-        d[MKEYS.mtype.name] = MTYPES.STATUS.name
-        await self.broker.publish(json.stringify(d))
-
     async def handle_command(self,cmd):
         await self.msg_queue.put(cmd)
 
@@ -116,9 +85,17 @@ class ClockGen:
     def __init__(self,farbmap):
         self.farbmap = farbmap
 
+    def gen(self):
+        while True:
+            yield "Clock",5.0
+
 class TestGen:
     def __init__(self,farbmap):
         self.farbmap = farbmap
+
+    def gen(self):
+        while True:
+            yield "Test",5.0
 
 GENTYPE_COLMAP = {
     GENERATOR_TYPE.Uhr : ([COL_SECT.Vordergrund,COL_SECT.Hintergrund],ClockGen),
@@ -136,7 +113,7 @@ class AGenerator(dict):
         self.count = 0
         cols,genclass = GENTYPE_COLMAP[self.generator_type]
         self.farbmap = dict(zip( cols, self.INIT))
-        self.gen = genclass(self.farbmap)
+        self.gen = genclass(self.farbmap).gen()
 
     def msg_dict(self):
         return {
@@ -149,12 +126,13 @@ class AGenerator(dict):
         return self
 
     async def __anext__(self):
+        b,s = next(self.gen)
         try:
-            await asyncio.sleep(5)
+            await asyncio.sleep(s)
         except asyncio.CancelledError:
             raise StopAsyncIteration
         self.count += 1
-        return f"{self.name} Farbe {self.count}"
+        return b
 
 class ConStatus:
 

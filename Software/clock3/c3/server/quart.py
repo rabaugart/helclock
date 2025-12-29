@@ -1,7 +1,7 @@
 """
 Nimm shift-cmd-r/chromium oder option-cmd-r/safari, um Skripte ohne Cache neu zu laden
 """
-import asyncio, json
+import asyncio, json, platform
 from quart import Quart, render_template, websocket
 
 from .messages import MTYPES, MKEYS, msg_script_consts, Command
@@ -46,7 +46,8 @@ async def stopper(t):
 con = Controler()
 
 async def main():
-    t = asyncio.create_task(app.run_task())
+    host = "127.0.0.1" if platform.system() == "Darwin" else "0.0.0.0"
+    t = asyncio.create_task(app.run_task(host=host))
     c = asyncio.create_task(con.run())
     #s = asyncio.create_task(stopper(t))
     try:

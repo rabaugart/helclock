@@ -1,11 +1,16 @@
-import functools, itertools
+import functools
 from enum import Enum
 
-RGB = Enum("RGB","rot grün blau")
+class RGB(Enum):
+    rot = 0
+    grün = 1
+    blau = 2
 
 class Color:
     def __init__(self,r,g,b):
         self.b = bytearray([r,g,b])
+    def set(self,rgb,value):
+        self.b[rgb.value] = int(value) & 0xff
     def __eq__(self,o):
         if isinstance(o,Color):
             return self.b == o.b

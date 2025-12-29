@@ -46,7 +46,7 @@ class Controler {
               bu.max = 255;
               bu.value = coli[ci];
               bu.onchange = (e) =>
-                col_slider_changed(e.target.valueAsNumber, colseci, ci);
+                col_slider_changed(colseci, ci, e.target.valueAsNumber);
               sp.appendChild(bu);
               sp.className = `farb-slider ${ci}-slider`;
               div.appendChild(sp);
@@ -110,7 +110,14 @@ function send_startup(e) {
 ws.onopen = send_startup;
 
 function col_slider_changed(sect, col, value) {
-  console.log("Ändere", sect, col, value, con.selpol);
+  console.log("Ändere", value, sect, col, con.selpol);
+  const d = {};
+  d[MK_mtype] = MT_COL_UPDATE;
+  d[MK_selected_generator] = con.selpol;
+  d[MK_colsec] = sect;
+  d[MK_color] = col;
+  d[MK_value] = value;
+  ws.send(JSON.stringify(d));
 }
 
 function ondocload(event) {
@@ -134,7 +141,7 @@ function ondocload(event) {
       bu.type = "range";
       bu.min = 0;
       bu.max = 255;
-      bu.onchange = (e) => col_slider_changed(e.target.valueAsNumber, si, ci);
+      bu.onchange = (e) => col_slider_changed(si, ci, e.target.valueAsNumber);
       sp.appendChild(bu);
       sp.className = `farb-slider ${ci}-slider`;
       di.appendChild(sp);

@@ -21,7 +21,7 @@ async def _receive() -> None:
             print("WS received", cmd)
             await con.handle_command(cmd)
         except Exception as e:
-            print("Error ws receiving",e)
+            print("Error ws receiving",e,message)
 
 @app.websocket("/ws")
 async def ws() -> None:

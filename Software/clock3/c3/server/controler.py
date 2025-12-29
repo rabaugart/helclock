@@ -51,14 +51,20 @@ class Controler:
         await self.msg_queue.put(cmd)
 
     def process_command(self,cmd):
-        if cmd.mtype == MTYPES.GENERATOR_SELECT:
-            l = list( (i,g.name)
+        try:
+            if cmd.mtype == MTYPES.STARTUP:
+                return
+            l = list( (i,g)
                 for (i,g) in enumerate(self.status.generators) if g.name == cmd.selected_generator )
             assert( len(l)== 1)
-            self.gen_no = l[0][0]
-            self.status.selected_generator = l[0][1]
-        if cmd.mtype == MTYPES.STARTUP:
-            pass
+            i,g = l[0]
+            self.gen_no = i
+            self.status.selected_generator = g.name
+            if cmd.mtype == MTYPES.COL_UPDATE:
+                print("Setze Farbe:",g.name,cmd.colsec,cmd.color,cmd.value)
+                g.farbmap[cmd.colsec].set(cmd.color,cmd.value)
+        except Exception as e:
+            print("Process error:",e)
 
     def selected_generator(self):
         return self.status.generators[self.gen_no]

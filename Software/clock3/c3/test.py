@@ -24,6 +24,12 @@ class T3(unittest.TestCase):
     def testColor(self):
         self.assertEqual(c3.ROT.b,bytearray([255,0,0]))
         self.assertEqual(c3.ROT,c3.Color(255,0,0))
+        self.assertEqual(c3.RGB.rot.value,0)
+        self.assertEqual(c3.RGB.grün.value,1)
+        self.assertEqual(c3.RGB.blau.value,2)
+        c = c3.Color(10,10,10)
+        c.set(c3.RGB.blau,200)
+        self.assertEqual(c.b,bytearray([10,10,200]))
         self.assertEqual((c3.ROT*0.5).b,bytearray([127,0,0]))
         self.assertEqual((c3.ROT*1.5).b,bytearray([255,0,0]))
         self.assertEqual((c3.ROT*-1.5).b,bytearray([0,0,0]))

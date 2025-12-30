@@ -1,10 +1,10 @@
 """
 Nimm shift-cmd-r/chromium oder option-cmd-r/safari, um Skripte ohne Cache neu zu laden
 """
-import asyncio, json, platform
+import asyncio, platform
 from quart import Quart, render_template, websocket
 
-from .messages import MTYPES, MKEYS, msg_script_consts, Command
+from .messages import msg_script_consts, Command
 from .controler import Controler
 
 app = Quart(__name__)
@@ -35,25 +35,19 @@ async def ws() -> None:
             task.cancel()
             await task
 
-async def stopper(t):
-    count = 6
-    while count > 0:
-        await asyncio.sleep(10)
-        print("stopper")
-        count -= 1
-    t.cancel()
+async def stopper():
+    await asyncio.sleep(60*60)
+    return True
 
 con = Controler()
 
 async def main():
     host = "127.0.0.1" if platform.system() == "Darwin" else "0.0.0.0"
-    t = asyncio.create_task(app.run_task(host=host))
+    t = asyncio.create_task(app.run_task(host=host,shutdown_trigger=stopper))
     c = asyncio.create_task(con.run())
-    #s = asyncio.create_task(stopper(t))
-    try:
-        await t
-    except asyncio.CancelledError:
-        print("app gestoppt")
+    await t
+    print("Webserver gestoppt")
+    await c
     #c.cancel()
     #await s
 

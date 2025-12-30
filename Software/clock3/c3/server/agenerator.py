@@ -5,8 +5,6 @@ from .messages import MKEYS, COL_SECT
 from c3.color import VORDEFINIERTE_FARBEN, colors_bytes
 from c3.gen import rotate_list
 
-GENERATOR_TYPE = Enum("PT","Uhr Test")
-
 class ClockGen:
     TNAME = "clock"
     TCOL_SECTS = [COL_SECT.Vordergrund,COL_SECT.Hintergrund]

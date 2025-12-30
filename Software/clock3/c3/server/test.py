@@ -1,6 +1,8 @@
 import asyncio, json
 from .controler import Controler
 from .messages import MKEYS, MTYPES, Command
+from .genset import ConStatus, TestGenSet
+
 import unittest
 
 class MockSpi:
@@ -37,7 +39,7 @@ class ControlerTest(unittest.TestCase):
 
     def testStartStop(self):
         spi = MockSpi()
-        con = Controler(spi)
+        con = Controler(TestGenSet(),spi)
         asyncio.run(self.startStop(con))
         self.assertEqual(len(spi.received),2)
         self.assertEqual(len(spi.received[0]),3*3)
@@ -59,7 +61,7 @@ class ControlerTest(unittest.TestCase):
 
     def testSwitch(self):
         spi = MockSpi()
-        con = Controler(spi)
+        con = Controler(TestGenSet(),spi)
         recv = MockReceiver(con)
         asyncio.run(self.switch(con,recv))
         self.assertEqual(len(spi.received),5)
@@ -68,3 +70,11 @@ class ControlerTest(unittest.TestCase):
         self.assertEqual(len(recv.msgs),4)
         self.assertEqual(recv.status_counter,4)
         self.assertEqual(recv.selected_generators,"A C B B".split())
+
+    def testMsg(self):
+        c = ConStatus()
+        ks = c.msg_dict().keys()
+        self.assertIn(MKEYS.generators.name, ks)
+        self.assertIn(MKEYS.selected_generator.name, ks)
+        self.assertGreater( len(json.dumps(c.msg_dict())),50)
+        #self.assertEqual(json.dumps(c.msg_dict()),"")

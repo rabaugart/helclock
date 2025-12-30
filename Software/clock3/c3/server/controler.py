@@ -1,17 +1,13 @@
-import asyncio, json, itertools
-from enum import Enum
-import unittest
-
+import asyncio, json
 
 from c3 import Spi
 from .messages import MKEYS, MTYPES
 from .broker import Broker
-from .agenerator import AGenerator, ClockGen, TestGen
 
 class Controler:
-    def __init__(self,spi=None):
+    def __init__(self,genset,spi=None):
         self.broker = Broker()
-        self.status = ConStatus()
+        self.status = genset
         self.msg_queue = None
         self.spi = spi if spi else Spi()
 
@@ -68,42 +64,3 @@ class Controler:
     async def subscribe(self):
         async for m in self.broker.subscribe():
             yield m
-
-class ConStatus:
-
-    def __init__(self):
-        self.generators = [
-            AGenerator("A",ClockGen),
-            AGenerator("B",ClockGen),
-            AGenerator("C",TestGen),
-        ]
-        self.gen_no = 0
-        self._selected_generator = self.generators[self.gen_no]
-
-    def select_generator(self,gname):
-        l = list( (i,g)
-            for (i,g) in enumerate(self.generators) if g.name == gname )
-        assert( len(l)== 1)
-        self.gen_no, self._selected_generator = l[0]
-
-    def selected_generator(self):
-        return self.generators[self.gen_no]
-
-    def set_sel_farbe(self,colsec,color,value):
-        self._selected_generator.farbmap[colsec].set(color,value)
-
-    def msg_dict(self):
-        return {
-            MKEYS.generators.name : list( i.msg_dict() for i in self.generators ),
-            MKEYS.selected_generator.name: self._selected_generator.name,
-        }
-
-class ConTest(unittest.TestCase):
-
-    def testMsg(self):
-        c = ConStatus()
-        ks = c.msg_dict().keys()
-        self.assertIn(MKEYS.generators.name, ks)
-        self.assertIn(MKEYS.selected_generator.name, ks)
-        self.assertGreater( len(json.dumps(c.msg_dict())),50)
-        #self.assertEqual(json.dumps(c.msg_dict()),"")

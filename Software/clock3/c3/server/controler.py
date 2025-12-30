@@ -13,7 +13,6 @@ class Controler:
         self.broker = Broker()
         self.status = ConStatus()
         self.msg_queue = None
-        self.gen_no = 0
         self.spi = spi if spi else Spi()
 
     async def handle_command(self,cmd):
@@ -23,25 +22,17 @@ class Controler:
         try:
             if cmd.mtype == MTYPES.STARTUP:
                 return
-            l = list( (i,g)
-                for (i,g) in enumerate(self.status.generators) if g.name == cmd.selected_generator )
-            assert( len(l)== 1)
-            i,g = l[0]
-            self.gen_no = i
-            self.status.selected_generator = g.name
+            self.status.select_generator( cmd.selected_generator)
             if cmd.mtype == MTYPES.COL_UPDATE:
-                print("Setze Farbe:",g.name,cmd.colsec,cmd.color,cmd.value)
-                g.farbmap[cmd.colsec].set(cmd.color,cmd.value)
+                print("Setze Farbe:",cmd.selected_generator,cmd.colsec,cmd.color,cmd.value)
+                self.status.selected_generator().farbmap[cmd.colsec].set(cmd.color,cmd.value)
         except Exception as e:
             print("Process error:",e)
 
-    def selected_generator(self):
-        return self.status.generators[self.gen_no]
-
     async def generate(self):
-        print(f"Starting {self.gen_no}")
+        print(f"Starting {self.status.selected_generator().name}")
         await self.publish_status()
-        async for f in self.selected_generator():
+        async for f in self.status.selected_generator():
             #print("Controler",f)
             self.spi.putbytes(f)
         print("Generator stopped")
@@ -86,12 +77,22 @@ class ConStatus:
             AGenerator("B",GENERATOR_TYPE.Uhr),
             AGenerator("C",GENERATOR_TYPE.Test),
         ]
-        self.selected_generator = self.generators[0].name
+        self.gen_no = 0
+        self._selected_generator = self.generators[self.gen_no]
+
+    def select_generator(self,gname):
+        l = list( (i,g)
+            for (i,g) in enumerate(self.generators) if g.name == gname )
+        assert( len(l)== 1)
+        self.gen_no, self._selected_generator = l[0]
+
+    def selected_generator(self):
+        return self.generators[self.gen_no]
 
     def msg_dict(self):
         return {
             MKEYS.generators.name : list( i.msg_dict() for i in self.generators ),
-            MKEYS.selected_generator.name: self.selected_generator,
+            MKEYS.selected_generator.name: self._selected_generator.name,
         }
 
 class ConTest(unittest.TestCase):

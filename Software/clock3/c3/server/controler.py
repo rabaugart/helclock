@@ -6,7 +6,7 @@ import unittest
 from c3 import Spi
 from .messages import MKEYS, MTYPES
 from .broker import Broker
-from .agenerator import AGenerator, GENERATOR_TYPE
+from .agenerator import AGenerator, ClockGen, TestGen
 
 class Controler:
     def __init__(self,spi=None):
@@ -25,7 +25,7 @@ class Controler:
             self.status.select_generator( cmd.selected_generator)
             if cmd.mtype == MTYPES.COL_UPDATE:
                 print("Setze Farbe:",cmd.selected_generator,cmd.colsec,cmd.color,cmd.value)
-                self.status.selected_generator().farbmap[cmd.colsec].set(cmd.color,cmd.value)
+                self.status.set_sel_farbe(cmd.colsec,cmd.color,cmd.value)
         except Exception as e:
             print("Process error:",e)
 
@@ -73,9 +73,9 @@ class ConStatus:
 
     def __init__(self):
         self.generators = [
-            AGenerator("A",GENERATOR_TYPE.Uhr),
-            AGenerator("B",GENERATOR_TYPE.Uhr),
-            AGenerator("C",GENERATOR_TYPE.Test),
+            AGenerator("A",ClockGen),
+            AGenerator("B",ClockGen),
+            AGenerator("C",TestGen),
         ]
         self.gen_no = 0
         self._selected_generator = self.generators[self.gen_no]
@@ -88,6 +88,9 @@ class ConStatus:
 
     def selected_generator(self):
         return self.generators[self.gen_no]
+
+    def set_sel_farbe(self,colsec,color,value):
+        self._selected_generator.farbmap[colsec].set(color,value)
 
     def msg_dict(self):
         return {

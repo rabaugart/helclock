@@ -8,6 +8,9 @@ from c3.gen import rotate_list
 GENERATOR_TYPE = Enum("PT","Uhr Test")
 
 class ClockGen:
+    TNAME = "clock"
+    TCOL_SECTS = [COL_SECT.Vordergrund,COL_SECT.Hintergrund]
+
     def __init__(self,farbmap):
         self.farbmap = farbmap
 
@@ -21,6 +24,8 @@ class ClockGen:
             count += 1
 
 class TestGen:
+    TNAME = "test"
+    TCOL_SECTS = [COL_SECT.Vordergrund,COL_SECT.Mittelfarbe,COL_SECT.Hintergrund]
     def __init__(self,farbmap):
         self.farbmap = farbmap
 
@@ -34,28 +39,21 @@ class TestGen:
             l = rotate_list(l)
             count += 1
 
-GENTYPE_COLMAP = {
-    GENERATOR_TYPE.Uhr : ([COL_SECT.Vordergrund,COL_SECT.Hintergrund],ClockGen),
-    GENERATOR_TYPE.Test : ([COL_SECT.Vordergrund,COL_SECT.Mittelfarbe,COL_SECT.Hintergrund],TestGen),
-}
-
 class AGenerator(dict):
     "Async generator"
 
     INIT = itertools.cycle(VORDEFINIERTE_FARBEN)
 
-    def __init__(self,name,gent):
+    def __init__(self,name,genclass):
         self.name = name
-        self.generator_type = gent
-        cols,genclass = GENTYPE_COLMAP[self.generator_type]
-        self.farbmap = dict(zip( cols, self.INIT))
         self.genclass = genclass
+        self.farbmap = dict(zip( genclass.TCOL_SECTS, self.INIT))
         self.gen = None
 
     def msg_dict(self):
         return {
             MKEYS.generator_name.name : self.name,
-            MKEYS.generator_type.name : self.generator_type.name,
+            MKEYS.generator_type.name : self.genclass.TNAME,
             MKEYS.colors.name : dict( (si.name,ci.msg_dict()) for (si,ci) in self.farbmap.items()),
         }
 

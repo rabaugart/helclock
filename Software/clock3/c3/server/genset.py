@@ -1,7 +1,7 @@
 from .agenerator import AGenerator, ClockGen, TestGen
 from .messages import MKEYS
 
-class ConStatus:
+class GenSetBase:
 
     def __init__(self):
         self.generators = [
@@ -9,7 +9,7 @@ class ConStatus:
             AGenerator("B",ClockGen),
             AGenerator("C",TestGen),
         ]
-        self._selected_generator = self.generators[0]
+        self._selected_generator = None
 
     def select_generator(self,gname):
         l = list( g
@@ -18,6 +18,8 @@ class ConStatus:
         self._selected_generator = l[0]
 
     def selected_generator(self):
+        if self._selected_generator is None:
+            self._selected_generator = self.generators[0]
         return self._selected_generator
 
     def set_sel_farbe(self,colsec,color,value):
@@ -26,15 +28,21 @@ class ConStatus:
     def msg_dict(self):
         return {
             MKEYS.generators.name : list( i.msg_dict() for i in self.generators ),
-            MKEYS.selected_generator.name: self._selected_generator.name,
+            MKEYS.selected_generator.name: self.selected_generator().name,
         }
 
-class ProdGenSet(ConStatus):
+class ProdGenSet(GenSetBase):
 
     def __init__(self):
-        ConStatus.__init__(self)
+        GenSetBase.__init__(self)
+        self.generators = [
+            AGenerator("Clock A",ClockGen),
+            AGenerator("Clock B",ClockGen),
+            AGenerator("Test",TestGen),
+        ]
+        self._selected_generator = self.generators[2]
 
-class TestGenSet(ConStatus):
+class TestGenSet(GenSetBase):
 
     def __init__(self):
-        ConStatus.__init__(self)
+        GenSetBase.__init__(self)

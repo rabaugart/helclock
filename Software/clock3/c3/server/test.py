@@ -1,7 +1,7 @@
 import asyncio, json
 from .controler import Controler
 from .messages import MKEYS, MTYPES, Command
-from .genset import ConStatus, TestGenSet
+from .genset import TestGenSet
 
 import unittest
 
@@ -72,7 +72,7 @@ class ControlerTest(unittest.TestCase):
         self.assertEqual(recv.selected_generators,"A C B B".split())
 
     def testMsg(self):
-        c = ConStatus()
+        c = TestGenSet()
         ks = c.msg_dict().keys()
         self.assertIn(MKEYS.generators.name, ks)
         self.assertIn(MKEYS.selected_generator.name, ks)

@@ -32,10 +32,12 @@ class TestGen:
         l = [ self.farbmap[COL_SECT.Vordergrund],
             self.farbmap[COL_SECT.Mittelfarbe],
             self.farbmap[COL_SECT.Hintergrund]]
-        while True:
-            yield colors_bytes(l),0.1 if count < 1 else 1.0
-            l = rotate_list(l)
+        for i in l:
+            yield colors_bytes([i]*3),0.1 if count < 1 else 5.0
             count += 1
+        while True:
+            yield colors_bytes(l),0.5
+            l = rotate_list(l)
 
 class AGenerator(dict):
     "Async generator"

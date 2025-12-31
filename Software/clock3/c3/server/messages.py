@@ -8,16 +8,28 @@ import unittest
 MTYPES = Enum("MT","STARTUP STATUS GENERATOR_SELECT COL_UPDATE")
 MKEYS = Enum("MK","mtype selected_generator generators generator_name generator_type colsec color value colors")
 
-COL_SECT = Enum("CS","Vordergrund Hintergrund Mittelfarbe")
-
 def mtypes_js():
     return "\n".join( f'const MT_{i.name} = "{i.name}";' for i in MTYPES)
 
 def mkeys_js():
     return "\n".join( f'const MK_{i.name} = "{i.name}";' for i in MKEYS)
 
+COL_SECT = Enum("CS","Vordergrund Hintergrund Mittelfarbe")
+
+COL_SECT_TRANS = {
+    COL_SECT.Mittelfarbe: "Mittl. Farbe",
+}
+
+def cs_trans(cs):
+    return COL_SECT_TRANS.get(cs,cs.name)
+
+def msg_col_sect_map():
+    return "const cs_map = new Map();\n"+"\n".join(
+        f'cs_map.set("{i.name}","{cs_trans(i)}");' for i in COL_SECT
+    )
+
 def msg_script_consts():
-    return mtypes_js() + "\n" + mkeys_js()
+    return "\n".join( [mtypes_js(), mkeys_js(), msg_col_sect_map() ])
 
 class Command:
 

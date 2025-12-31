@@ -34,7 +34,7 @@ class Controler {
             //console.log("Colsec", colseci, coli);
             const div = document.createElement("div");
             const sptext = document.createElement("span");
-            sptext.appendChild(document.createTextNode(colseci));
+            sptext.appendChild(document.createTextNode(cs_map.get(colseci)));
             sptext.className = "farb-slider";
             div.appendChild(sptext);
             // spcol ist der Farbkasten

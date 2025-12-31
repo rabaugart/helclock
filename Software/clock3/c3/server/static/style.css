@@ -20,7 +20,7 @@ button.sel {
 div.div-slider {
     display: grid;
     gap: 10px;
-    grid-template-columns: 1.2fr 0.4fr 2fr 2fr 2fr;
+    grid-template-columns: 1.8fr 0.4fr 2fr 2fr 2fr;
 }
 span.farb-slider {
     padding: 5pt;

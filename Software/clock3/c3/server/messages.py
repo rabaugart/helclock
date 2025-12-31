@@ -14,10 +14,13 @@ def mtypes_js():
 def mkeys_js():
     return "\n".join( f'const MK_{i.name} = "{i.name}";' for i in MKEYS)
 
-COL_SECT = Enum("CS","Vordergrund Hintergrund Mittelfarbe")
+COL_SECT = Enum("CS","Vordergrund Hintergrund FeierVordergrund FeierFam FeierHintergrund Mittelfarbe")
 
 COL_SECT_TRANS = {
     COL_SECT.Mittelfarbe: "Mittl. Farbe",
+    COL_SECT.FeierVordergrund: "Ft. Vordergrund",
+    COL_SECT.FeierHintergrund: "Ft. Hintergrund",
+    COL_SECT.FeierFam: "Ft. Familie",
 }
 
 def cs_trans(cs):

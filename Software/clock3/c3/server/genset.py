@@ -39,6 +39,7 @@ class ProdGenSet(GenSetBase):
         self._selected_generator = self.generators[2]
 
 class TestGenSet(GenSetBase):
+    "Test-Generator für unittests"
 
     def __init__(self):
         GenSetBase.__init__(self)

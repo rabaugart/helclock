@@ -7,7 +7,7 @@ from c3.gen import rotate_list
 
 class ClockGen:
     TNAME = "clock"
-    TCOL_SECTS = [COL_SECT.Vordergrund,COL_SECT.Hintergrund]
+    TCOL_SECTS = [COL_SECT.Vordergrund,COL_SECT.Hintergrund,COL_SECT.FeierVordergrund]
 
     def __init__(self,farbmap):
         self.farbmap = farbmap

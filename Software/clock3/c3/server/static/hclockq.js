@@ -31,12 +31,20 @@ class Controler {
           }
           // Iteriere über die neuen Sektionen
           for (const [colseci, coli] of Object.entries(pi[MK_colors])) {
-            console.log("Colsec", colseci, coli);
+            //console.log("Colsec", colseci, coli);
             const div = document.createElement("div");
             const sptext = document.createElement("span");
             sptext.appendChild(document.createTextNode(colseci));
             sptext.className = "farb-slider";
             div.appendChild(sptext);
+            // spcol ist der Farbkasten
+            const spcol = document.createElement("span");
+            spcol.className = "farb-slider";
+            spcol.style.setProperty(
+              "background-color",
+              `rgb(${coli["rot"]} ${coli["grün"]} ${coli["blau"]}`,
+            );
+            div.appendChild(spcol);
             div.className = "div-slider";
             for (const ci of ["rot", "grün", "blau"]) {
               let sp = document.createElement("span");

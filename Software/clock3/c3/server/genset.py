@@ -1,14 +1,10 @@
-from .agenerator import AGenerator, ClockGen, TestGen
+from .agenerator import AGenerator, ClockGen, TestGen1, TestGen2
 from .messages import MKEYS
 
 class GenSetBase:
 
     def __init__(self):
-        self.generators = [
-            AGenerator("A",ClockGen),
-            AGenerator("B",ClockGen),
-            AGenerator("C",TestGen),
-        ]
+        self.generators = []
         self._selected_generator = None
 
     def select_generator(self,gname):
@@ -38,7 +34,7 @@ class ProdGenSet(GenSetBase):
         self.generators = [
             AGenerator("Clock A",ClockGen),
             AGenerator("Clock B",ClockGen),
-            AGenerator("Test",TestGen),
+            AGenerator("Test",TestGen2),
         ]
         self._selected_generator = self.generators[2]
 
@@ -46,3 +42,8 @@ class TestGenSet(GenSetBase):
 
     def __init__(self):
         GenSetBase.__init__(self)
+        self.generators = [
+            AGenerator("A",TestGen1),
+            AGenerator("B",TestGen1),
+            AGenerator("C",TestGen2),
+        ]

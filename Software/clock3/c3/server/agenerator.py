@@ -21,8 +21,24 @@ class ClockGen:
                 self.farbmap[COL_SECT.Vordergrund]]), 0.1 if count < 1 else 5.0
             count += 1
 
-class TestGen:
-    TNAME = "test"
+class TestGen1:
+    TNAME = "tgen1"
+    TCOL_SECTS = [COL_SECT.Vordergrund,COL_SECT.Hintergrund]
+
+    def __init__(self,farbmap):
+        self.farbmap = farbmap
+
+    def gen(self):
+        count = 0
+        while True:
+            yield colors_bytes([
+                self.farbmap[COL_SECT.Vordergrund],
+                self.farbmap[COL_SECT.Hintergrund],
+                self.farbmap[COL_SECT.Vordergrund]]), 0.1 if count < 1 else 5.0
+            count += 1
+
+class TestGen2:
+    TNAME = "tgen2"
     TCOL_SECTS = [COL_SECT.Vordergrund,COL_SECT.Mittelfarbe,COL_SECT.Hintergrund]
     def __init__(self,farbmap):
         self.farbmap = farbmap

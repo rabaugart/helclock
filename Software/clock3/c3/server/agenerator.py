@@ -54,7 +54,7 @@ class TestGen2:
         print(f"Starte TestGen2 mit Länge {len(l)}")
         for i in [self.farbmap[COL_SECT.Vordergrund],
             self.farbmap[COL_SECT.Mittelfarbe],self.farbmap[COL_SECT.Hintergrund]]:
-            yield colors_bytes([i]*self.slen),0.1 if count < 1 else 5.0
+            yield colors_bytes([i]*self.slen*self.pnum),0.1 if count < 1 else 5.0
             count += 1
         while True:
             yield colors_bytes(l),0.3

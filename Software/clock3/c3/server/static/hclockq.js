@@ -1,4 +1,4 @@
-const ws = new WebSocket(`ws://${location.host}/ws`);
+let ws = new WebSocket(`ws://${location.host}/ws`);
 
 class Controler {
   generators = null;
@@ -112,10 +112,21 @@ ws.addEventListener("message", function (event) {
 
 function send_startup(e) {
   const m = {};
+  document.getElementById("status").innerText = "Verbindung hergestellt";
   m[MK_mtype] = MT_STARTUP;
   ws.send(JSON.stringify(m));
   console.log("Startup sent");
 }
+
+function check_ws(e) {
+  if (ws.readyState == WebSocket.CLOSED) {
+    document.getElementById("status").innerText = "Verbindung verloren";
+    ws = new WebSocket(`ws://${location.host}/ws`);
+    ws.onopen = send_startup;
+  }
+}
+
+window.setInterval(check_ws, 5000);
 
 ws.onopen = send_startup;
 

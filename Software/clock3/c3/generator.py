@@ -24,6 +24,10 @@ class ColWortGenerator:
     BG_COLOR = c.GRÜN*0.1
     FG_COLOR = c.ROT
 
+    def __init__(self,**kwlist):
+        self.bg = kwlist["bg"] if "bg" in kwlist else self.BG_COLOR
+        self.fg = kwlist["fg"] if "fg" in kwlist else self.FG_COLOR
+
     def __iter__(self):
         while True:
             dt = self.zeit()

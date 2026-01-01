@@ -47,3 +47,29 @@ span.sectspan {
 div.sectdiv {
     margin-top: 10pt;
 }
+
+#blocker.blocker-visible {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#blocker.blocker-invisible {
+    display: none;
+}
+
+#blocker {
+    z-index: 1;
+    width: 90%;
+    height: 90%;
+    opacity: 0.85;
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    background-color: lightcoral;
+}
+
+#blocker > div {
+    margin: 50px;
+    display: block;
+}

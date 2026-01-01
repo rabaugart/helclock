@@ -113,6 +113,7 @@ ws.addEventListener("message", function (event) {
 function send_startup(e) {
   const m = {};
   document.getElementById("status").innerText = "Verbindung hergestellt";
+  document.getElementById("blocker").className = "blocker-invisible";
   m[MK_mtype] = MT_STARTUP;
   ws.send(JSON.stringify(m));
   console.log("Startup sent");
@@ -120,6 +121,7 @@ function send_startup(e) {
 
 function check_ws(e) {
   if (ws.readyState == WebSocket.CLOSED) {
+    document.getElementById("blocker").className = "blocker-visible";
     document.getElementById("status").innerText = "Verbindung verloren";
     ws = new WebSocket(`ws://${location.host}/ws`);
     ws.onopen = send_startup;

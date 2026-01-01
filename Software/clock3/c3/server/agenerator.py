@@ -16,8 +16,8 @@ class ClockGen:
     def gen(self):
         count = 0
         g = ColWortGenerator()
-        while True:
-            yield colors_bytes(g()), 0.1 if count < 1 else 5.0
+        for i in g:
+            yield colors_bytes(i), 0.1 if count < 1 else 5.0
             count += 1
 
 class TestGen1:

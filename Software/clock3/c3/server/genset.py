@@ -36,7 +36,7 @@ class ProdGenSet(GenSetBase):
             AGenerator("Clock B",ClockGen),
             AGenerator("Test",TestGen2),
         ]
-        self._selected_generator = self.generators[2]
+        self._selected_generator = self.generators[0]
 
 class TestGenSet(GenSetBase):
     "Test-Generator für unittests"

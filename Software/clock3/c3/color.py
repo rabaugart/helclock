@@ -26,6 +26,8 @@ class Color:
             RGB.grün.name: self.b[1],
             RGB.blau.name: self.b[2],
         }
+    def __str__(self):
+        return f"C({self.b[0]},{self.b[1]},{self.b[2]})"
 
 
 ROT = Color(255,0,0)

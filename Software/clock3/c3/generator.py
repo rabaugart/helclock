@@ -31,7 +31,7 @@ class ColWortGenerator:
     def __iter__(self):
         while True:
             dt = self.zeit()
-            s = Strang(self.BG_COLOR)
+            s = Strang(self.bg)
             self.fülle_xtra(dt,s)
             self.fülle_zeit(dt.time(),s)
             yield s
@@ -46,13 +46,17 @@ class ColWortGenerator:
             st.setze_wort_color(wi,self.zwort_color(wi))
 
     def zwort_color(self,w):
-        return ColWortGenerator.FG_COLOR
+        return self.fg
 
     def zeit(self):
         return datetime.datetime.now()
 
+    def __str__(self):
+        return f"ClockGen fg:{self.fg}, bg: {self.bg}"
+
 class TestGenerator(ColWortGenerator):
     def __init__(self,dt):
+        ColWortGenerator.__init__(self)
         self.dt = dt
     def zeit(self):
         return self.dt

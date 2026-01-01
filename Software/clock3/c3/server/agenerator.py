@@ -17,6 +17,7 @@ class ClockGen:
         count = 0
         g = ColWortGenerator(fg=self.farbmap[COL_SECT.Vordergrund],
             bg=self.farbmap[COL_SECT.Hintergrund])
+        print(f"Starting {g}")
         for i in g:
             yield colors_bytes(i), 0.1 if count < 1 else 5.0
             count += 1

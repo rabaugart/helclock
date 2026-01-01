@@ -48,3 +48,8 @@ class TestGenSet(GenSetBase):
             AGenerator("B",TestGen1),
             AGenerator("C",TestGen2,slen=slen),
         ]
+
+GENSETS = {
+    "service": ProdGenSet,
+    "testservice": TestGenSet,
+}

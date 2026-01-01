@@ -1,8 +1,9 @@
-import asyncio, json
+import sys, asyncio, json
 
 from c3 import Spi
 from .messages import MKEYS, MTYPES
 from .broker import Broker
+from .genset import GENSETS
 
 class Controler:
     def __init__(self,genset,spi=None):
@@ -64,3 +65,11 @@ class Controler:
     async def subscribe(self):
         async for m in self.broker.subscribe():
             yield m
+
+def controler_from_argv():
+    ctx = "service" if len(sys.argv) < 2 else sys.argv[1]
+    if not ctx in GENSETS:
+        l = ", ".join(GENSETS.keys())
+        raise RuntimeError(f"Unbekanter Kontext: {ctx}, verfügbar {l}")
+    print(f"Verwende Kontext: {ctx}")
+    return Controler(GENSETS[ctx]())

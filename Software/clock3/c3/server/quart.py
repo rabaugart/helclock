@@ -5,8 +5,7 @@ import asyncio, platform
 from quart import Quart, render_template, websocket
 
 from .messages import msg_script_consts, Command
-from .controler import Controler
-from .genset import ProdGenSet
+from .controler import controler_from_argv
 
 app = Quart(__name__)
 
@@ -40,7 +39,7 @@ async def stopper():
     await asyncio.sleep(60*60)
     return True
 
-con = Controler(ProdGenSet())
+con = controler_from_argv()
 
 async def main():
     host = "127.0.0.1" if platform.system() == "Darwin" else "0.0.0.0"

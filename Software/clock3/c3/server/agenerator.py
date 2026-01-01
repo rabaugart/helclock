@@ -44,12 +44,14 @@ class TestGen2:
     def __init__(self,farbmap,**kwds):
         self.farbmap = farbmap
         self.slen = kwds.get("slen",3)
+        self.pnum = kwds.get("pnum",1)
 
     def gen(self):
         count = 0
-        l = [ self.farbmap[COL_SECT.Vordergrund],
-            self.farbmap[COL_SECT.Mittelfarbe],
-            self.farbmap[COL_SECT.Hintergrund]]
+        l = ([ self.farbmap[COL_SECT.Vordergrund],
+            self.farbmap[COL_SECT.Mittelfarbe]]+
+            [self.farbmap[COL_SECT.Hintergrund]]*(self.slen-2))*self.pnum
+        print(f"Starte TestGen2 mit Länge {len(l)}")
         for i in l:
             yield colors_bytes([i]*self.slen),0.1 if count < 1 else 5.0
             count += 1

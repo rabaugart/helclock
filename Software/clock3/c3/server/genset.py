@@ -34,7 +34,7 @@ class ProdGenSet(GenSetBase):
         self.generators = [
             AGenerator("Clock A",ClockGen),
             AGenerator("Clock B",ClockGen),
-            AGenerator("Test",TestGen2),
+            AGenerator("Test",TestGen2,slen=22,pnum=5),
         ]
         self._selected_generator = self.generators[0]
 

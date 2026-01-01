@@ -52,6 +52,8 @@ class ControlerTest(unittest.TestCase):
         await asyncio.sleep(0.01)
         await con.handle_command(Command.select_generator("B"))
         await asyncio.sleep(6)
+        await con.handle_command(Command.select_generator("C"))
+        await asyncio.sleep(6)
         await con.handle_command(Command.startup())
         await asyncio.sleep(6)
         t.cancel()
@@ -61,15 +63,16 @@ class ControlerTest(unittest.TestCase):
 
     def testSwitch(self):
         spi = MockSpi()
-        con = Controler(TestGenSet(),spi)
+        tlen = 4
+        con = Controler(TestGenSet(slen=tlen),spi)
         recv = MockReceiver(con)
         asyncio.run(self.switch(con,recv))
-        self.assertEqual(len(spi.received),5)
+        self.assertEqual(len(spi.received),7)
         self.assertEqual(len(spi.received[0]),3*3)
-        self.assertEqual(len(spi.received[1]),3*3)
-        self.assertEqual(len(recv.msgs),4)
-        self.assertEqual(recv.status_counter,4)
-        self.assertEqual(recv.selected_generators,"A C B B".split())
+        self.assertEqual(len(spi.received[-1]),tlen*3)
+        self.assertEqual(len(recv.msgs),5)
+        self.assertEqual(recv.status_counter,5)
+        self.assertEqual(recv.selected_generators,"A C B C C".split())
 
     def testMsg(self):
         c = TestGenSet()

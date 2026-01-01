@@ -4,6 +4,7 @@ from enum import Enum
 from .messages import MKEYS, COL_SECT
 from c3.color import VORDEFINIERTE_FARBEN, colors_bytes
 from c3.gen import rotate_list
+from c3.generator import ColWortGenerator
 
 class ClockGen:
     TNAME = "clock"
@@ -14,18 +15,16 @@ class ClockGen:
 
     def gen(self):
         count = 0
+        g = ColWortGenerator()
         while True:
-            yield colors_bytes([
-                self.farbmap[COL_SECT.Vordergrund],
-                self.farbmap[COL_SECT.Hintergrund],
-                self.farbmap[COL_SECT.Vordergrund]]), 0.1 if count < 1 else 5.0
+            yield colors_bytes(g()), 0.1 if count < 1 else 5.0
             count += 1
 
 class TestGen1:
     TNAME = "tgen1"
     TCOL_SECTS = [COL_SECT.Vordergrund,COL_SECT.Hintergrund]
 
-    def __init__(self,farbmap):
+    def __init__(self,farbmap,**kwds):
         self.farbmap = farbmap
 
     def gen(self):
@@ -40,8 +39,9 @@ class TestGen1:
 class TestGen2:
     TNAME = "tgen2"
     TCOL_SECTS = [COL_SECT.Vordergrund,COL_SECT.Mittelfarbe,COL_SECT.Hintergrund]
-    def __init__(self,farbmap):
+    def __init__(self,farbmap,**kwds):
         self.farbmap = farbmap
+        self.slen = kwds.get("slen",3)
 
     def gen(self):
         count = 0
@@ -49,7 +49,7 @@ class TestGen2:
             self.farbmap[COL_SECT.Mittelfarbe],
             self.farbmap[COL_SECT.Hintergrund]]
         for i in l:
-            yield colors_bytes([i]*3),0.1 if count < 1 else 5.0
+            yield colors_bytes([i]*self.slen),0.1 if count < 1 else 5.0
             count += 1
         while True:
             yield colors_bytes(l),0.5
@@ -60,9 +60,10 @@ class AGenerator(dict):
 
     INIT = itertools.cycle(VORDEFINIERTE_FARBEN)
 
-    def __init__(self,name,genclass):
+    def __init__(self,name,genclass,**kwds):
         self.name = name
         self.genclass = genclass
+        self.genargs = kwds
         self.farbmap = dict(zip( genclass.TCOL_SECTS, self.INIT))
         self.gen = None
 
@@ -74,7 +75,7 @@ class AGenerator(dict):
         }
 
     def __aiter__(self):
-        self.gen = self.genclass(self.farbmap).gen()
+        self.gen = self.genclass(self.farbmap,**self.genargs).gen()
         return self
 
     async def __anext__(self):

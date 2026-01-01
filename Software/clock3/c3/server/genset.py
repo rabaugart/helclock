@@ -41,10 +41,10 @@ class ProdGenSet(GenSetBase):
 class TestGenSet(GenSetBase):
     "Test-Generator für unittests"
 
-    def __init__(self):
+    def __init__(self,slen=3):
         GenSetBase.__init__(self)
         self.generators = [
             AGenerator("A",TestGen1),
             AGenerator("B",TestGen1),
-            AGenerator("C",TestGen2),
+            AGenerator("C",TestGen2,slen=slen),
         ]

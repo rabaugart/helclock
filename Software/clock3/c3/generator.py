@@ -72,7 +72,7 @@ class ColWortGenerator:
         return datetime.datetime.now()
 
     def __str__(self):
-        return f"ClockGen fg:{self.fg}, bg: {self.bg}"
+        return f"ClockGen fg:{self.fg}, bg: {self.bg}, ffg: {self.ffg}, sfg: {self.sfg}, fbg: {self.fbg}"
 
 class TestGenerator(ColWortGenerator):
     def __init__(self,dt):

@@ -27,7 +27,7 @@ class Controler:
             print("Process error:",e)
 
     async def generate(self):
-        print(f"Starting {self.status.selected_generator().name}")
+        print(f"Starting {self.status.selected_generator().name}/{self.status.selected_generator().name_typ()}")
         await self.publish_status()
         async for f in self.status.selected_generator():
             #print("Controler",f)

@@ -1,5 +1,4 @@
 import asyncio, itertools
-from enum import Enum
 
 from .messages import MKEYS, COL_SECT
 from c3.color import VORDEFINIERTE_FARBEN, colors_bytes
@@ -8,19 +7,24 @@ from c3.generator import ColWortGenerator
 
 class ClockGen:
     TNAME = "clock"
-    TCOL_SECTS = [COL_SECT.Vordergrund,COL_SECT.Hintergrund,COL_SECT.FeierVordergrund]
+    TCOL_SECTS = [COL_SECT.Vordergrund,COL_SECT.Hintergrund,
+        COL_SECT.FeierVordergrund,COL_SECT.FeierFam,COL_SECT.FeierHintergrund]
 
     def __init__(self,farbmap):
         self.farbmap = farbmap
 
     def gen(self):
-        count = 0
-        g = ColWortGenerator(fg=self.farbmap[COL_SECT.Vordergrund],
-            bg=self.farbmap[COL_SECT.Hintergrund])
+        g = ColWortGenerator(
+            fg=self.farbmap[COL_SECT.Vordergrund],
+            bg=self.farbmap[COL_SECT.Hintergrund],
+            ffg=self.farbmap[COL_SECT.FeierVordergrund],
+            fbg=self.farbmap[COL_SECT.FeierHintergrund],
+            sfg=self.farbmap[COL_SECT.FeierFam]
+        )
         print(f"Starting {g}")
+        yield colors_bytes(g.feier_demo()), 5.0
         for i in g:
-            yield colors_bytes(i), 0.1 if count < 1 else 5.0
-            count += 1
+            yield colors_bytes(i), 5.0
 
 class TestGen1:
     TNAME = "tgen1"
@@ -71,6 +75,9 @@ class AGenerator(dict):
         self.genargs = kwds
         self.farbmap = dict(zip( genclass.TCOL_SECTS, self.INIT))
         self.gen = None
+
+    def name_typ(self):
+        return self.genclass.TNAME
 
     def msg_dict(self):
         return {

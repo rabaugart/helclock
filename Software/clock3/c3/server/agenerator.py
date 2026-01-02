@@ -22,7 +22,7 @@ class ClockGen:
             sfg=self.farbmap[COL_SECT.FeierFam]
         )
         print(f"Starting {g}")
-        yield colors_bytes(g.feier_demo()), 5.0
+        yield colors_bytes(g.feier_demo()), 0.1
         for i in g:
             yield colors_bytes(i), 5.0
 

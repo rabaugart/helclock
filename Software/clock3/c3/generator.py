@@ -62,7 +62,7 @@ class ColWortGenerator:
     def feier_demo(self):
         "Erzeuge Strang mit Zeitwörtern um 12:16 und X-Wörtern in Feiertagsfarben"
         st = Strang(self.fbg)
-        for wi in zeit_satz(datetime.time(12,16)):
+        for wi in zeit_satz(self.zeit()):
             st.setze_wort_color(wi,self.ffg)
         for xwi in XW:
             st.setze_wort_color(xwi,self.sfg)

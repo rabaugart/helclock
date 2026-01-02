@@ -5,7 +5,7 @@ import unittest
 import c3.color as c
 from .gen import take
 from .hclock import index_range, zeit_satz, wort_indexe
-from .xtra import dt_tagkatcols
+from .xtra import dt_tagkatcols, dt_tagkat, TagKat, XW
 
 class Strang(list):
 
@@ -23,30 +23,50 @@ class ColWortGenerator:
 
     BG_COLOR = c.GRÜN*0.1
     FG_COLOR = c.ROT
+    FFG_COLOR = c.WEISS
+    FBG_COLOR = c.SCHWARZ
+    SFG_COLOR = c.LILA
 
     def __init__(self,**kwlist):
-        self.bg = kwlist["bg"] if "bg" in kwlist else self.BG_COLOR
-        self.fg = kwlist["fg"] if "fg" in kwlist else self.FG_COLOR
+        self.bg = kwlist.get("bg",self.BG_COLOR)
+        self.fg = kwlist.get("fg",self.FG_COLOR)
+        # Feitertage
+        self.ffg = kwlist.get("ffg",self.FFG_COLOR)
+        self.fbg = kwlist.get("fbg",self.FBG_COLOR)
+        # Die Sonderzeichen
+        self.sfg = kwlist.get("sfg",self.SFG_COLOR)
+        # Für alle TagKat-Kategorien wird ffg verwendet
+        self.tagkat_map = { k:self.sfg for k in TagKat}
 
     def __iter__(self):
         while True:
             dt = self.zeit()
-            s = Strang(self.bg)
+            tkat = dt_tagkat(dt)
+            s = Strang(self.fbg if tkat else self.bg)
             self.fülle_xtra(dt,s)
-            self.fülle_zeit(dt.time(),s)
+            self.fülle_zeit(dt.time(),tkat,s)
             yield s
 
     def fülle_xtra(self,dt,st):
         "Extra Worte zur datetime dt"
-        for wi,ci in dt_tagkatcols(dt):
+        for wi,ci in dt_tagkatcols(dt,self.tagkat_map):
             st.setze_wort_color(wi,ci)
 
-    def fülle_zeit(self,ti,st):
+    def fülle_zeit(self,ti,tkat,st):
         for wi in zeit_satz(ti):
-            st.setze_wort_color(wi,self.zwort_color(wi))
+            st.setze_wort_color(wi,self.zwort_color(wi,tkat))
 
-    def zwort_color(self,w):
-        return self.fg
+    def zwort_color(self,w,tkat):
+        return self.ffg if tkat else self.fg
+
+    def feier_demo(self):
+        "Erzeuge Strang mit Zeitwörtern um 12:16 und X-Wörtern in Feiertagsfarben"
+        st = Strang(self.fbg)
+        for wi in zeit_satz(datetime.time(12,16)):
+            st.setze_wort_color(wi,self.ffg)
+        for xwi in XW:
+            st.setze_wort_color(xwi,self.sfg)
+        return st
 
     def zeit(self):
         return datetime.datetime.now()
@@ -79,8 +99,9 @@ class TestGen(unittest.TestCase):
         g = TestGenerator(datetime.datetime.fromisoformat("2025-01-06T12:00:00"))
         cl = list(take(g,1))[0]
         self.assertEqual(len(cl),Strang.SLEN)
-        self.assertEqual(set(cl),set([ColWortGenerator.FG_COLOR,ColWortGenerator.BG_COLOR,c.LILA]))
+        self.assertEqual(set(cl),set([ColWortGenerator.FFG_COLOR,ColWortGenerator.FBG_COLOR,ColWortGenerator.SFG_COLOR]))
         self.assertEqual(cl.count(c.LILA),3)
+        self.assertEqual(set(g.feier_demo()),set([ColWortGenerator.FFG_COLOR,ColWortGenerator.FBG_COLOR,ColWortGenerator.SFG_COLOR]))
     def testXtra2(self):
         g = TestGenerator(datetime.datetime.fromisoformat("2025-01-07T12:00:00"))
         cl = list(take(g,1))[0]

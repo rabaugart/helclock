@@ -18,6 +18,8 @@ class Color:
     def __mul__(self,fac):
         nfac = max(min(float(fac),1.0),0.0)
         return Color(*list(int(i*nfac) for i in self.b))
+    def copy(self):
+        return Color(self.b[0],self.b[1],self.b[2])
     def __hash__(self):
         return hash(self.b.hex())
     def msg_dict(self):

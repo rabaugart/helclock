@@ -67,13 +67,16 @@ class TestGen2:
 class AGenerator(dict):
     "Async generator"
 
-    INIT = itertools.cycle(VORDEFINIERTE_FARBEN)
+    @staticmethod
+    def col_init():
+        for coli in itertools.cycle(VORDEFINIERTE_FARBEN):
+            yield coli.copy()
 
     def __init__(self,name,genclass,**kwds):
         self.name = name
         self.genclass = genclass
         self.genargs = kwds
-        self.farbmap = dict(zip( genclass.TCOL_SECTS, self.INIT))
+        self.farbmap = dict(zip( genclass.TCOL_SECTS, self.col_init()))
         self.gen = None
 
     def name_typ(self):

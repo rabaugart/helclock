@@ -1,0 +1,75 @@
+body {
+    background-color: peachpuff;
+}
+
+button {
+    /* The "color" property defines the text color, in this case yellow. */
+    color: hsl(13 80% 61%);
+
+    /* The "background-color" property defines the background color, in this case black. */
+    background-color: hsl(13 30% 81%);
+    border-color: hsl(13 30% 81%);
+    padding: 15pt;
+    margin: 20pt;
+}
+
+button.sel {
+    border-color: hsl(13 80% 61%);
+}
+
+div.div-slider {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 1.8fr 0.4fr 2fr 2fr 2fr;
+}
+span.farb-slider {
+    padding: 5pt;
+    margin: 5pt;
+}
+
+span.rot-slider {
+    background-color: red;
+}
+
+span.grün-slider {
+    background-color: green;
+}
+
+span.blau-slider {
+    background-color: blue;
+}
+
+span.sectspan {
+    padding: 15pt;
+    width: 120px;
+}
+
+div.sectdiv {
+    margin-top: 10pt;
+}
+
+#blocker.blocker-visible {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#blocker.blocker-invisible {
+    display: none;
+}
+
+#blocker {
+    z-index: 1;
+    width: 90%;
+    height: 90%;
+    opacity: 0.85;
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    background-color: lightcoral;
+}
+
+#blocker > div {
+    margin: 50px;
+    display: block;
+}

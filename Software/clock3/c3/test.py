@@ -24,11 +24,18 @@ class T3(unittest.TestCase):
     def testColor(self):
         self.assertEqual(c3.ROT.b,bytearray([255,0,0]))
         self.assertEqual(c3.ROT,c3.Color(255,0,0))
+        self.assertEqual(c3.RGB.rot.value,0)
+        self.assertEqual(c3.RGB.grün.value,1)
+        self.assertEqual(c3.RGB.blau.value,2)
+        c = c3.Color(10,10,10)
+        c.set(c3.RGB.blau,200)
+        self.assertEqual(c.b,bytearray([10,10,200]))
         self.assertEqual((c3.ROT*0.5).b,bytearray([127,0,0]))
         self.assertEqual((c3.ROT*1.5).b,bytearray([255,0,0]))
         self.assertEqual((c3.ROT*-1.5).b,bytearray([0,0,0]))
         self.assertEqual((c3.WEISS*0.5).b,bytearray([127,127,127]))
         self.assertEqual((c3.WEISS*"0.5").b,bytearray([127,127,127]))
+        self.assertEqual(c3.WEISS.msg_dict(),{"rot":255,"grün":255,"blau":255})
         self.assertRaises(ValueError,lambda: c3.ROT*"hallo")
         self.assertEqual(c3.ternär_colors(0),[c3.ROT])
         self.assertEqual(c3.ternär_colors(10),[c3.GRÜN,c3.ROT,c3.GRÜN])
@@ -77,10 +84,3 @@ class T3(unittest.TestCase):
 def testiter(n):
     for i in [c3.ROT,c3.GRÜN]*n:
         yield [i,i]
-
-if __name__ == "__main__":
-    tl = unittest.TestLoader()
-    #tl.loadTestsFromModule(c3.hclock)
-    #tl.discover(".")
-    tl.loadTestsFromName("c3.hclock")
-    unittest.main(testLoader=tl,verbosity=0)

@@ -18,23 +18,23 @@ TagKatColors = {
     TagKat.BekGeburtstag : LILA,
 }
 
-def dt_tagkats(dt):
+def dt_tagkat(dt):
     return TagKatMap.get((dt.month,dt.day),None)
 
-def dt_tagkatcols(dt):
+def dt_tagkatcols(dt,map=TagKatColors):
     "[(xw1,col1),(xw2,col2),...] ggf. leer"
-    ws_tka = dt_tagkats(dt)
+    ws_tka = dt_tagkat(dt)
     if not ws_tka:
         return []
     ws, tkat = ws_tka
-    col = TagKatColors.get(tkat,None)
+    col = map.get(tkat,None)
     return list( (wi,col) for wi in ws ) if col else []
 
 class XWTest(unittest.TestCase):
     def testSatz(self):
         dt = datetime.datetime.fromisoformat("2025-01-06 12:00:00")
-        self.assertEqual(dt_tagkats(dt),TagKatMap[(1,6)])
+        self.assertEqual(dt_tagkat(dt),TagKatMap[(1,6)])
         self.assertEqual(dt_tagkatcols(dt),[(XW.DOM,LILA)])
         dt = datetime.datetime.fromisoformat("2025-01-07 12:00:00")
-        self.assertEqual(dt_tagkats(dt),None)
+        self.assertEqual(dt_tagkat(dt),None)
         self.assertEqual(dt_tagkatcols(dt),[])

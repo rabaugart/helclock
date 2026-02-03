@@ -30,6 +30,9 @@ TEXT = [
 
 def koordinaten_buchstabe(r,c):
     "Buchstabe an der Position r,c"
+    if r==NROWS:
+        # Die Minutenanzeige
+        return 'X'
     return TEXT[r][0][c]
 
 STAMM_RE = re.compile("^([^_]+).*$",re.U)

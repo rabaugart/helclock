@@ -42,7 +42,8 @@ def wort_stamm(w):
 
 def wort_koordinaten(w):
     if w in MIW:
-        return [(NROWS,w.value-1)]
+        # Alle Minuten-LEDs bis zum Wert
+        return [(NROWS,i) for i in range(w.value)]
     l = [ (i,t) for (i,(t,l)) in enumerate(TEXT) if w in l ]
     assert(len(l)==1)
     (row,t) = l[0]
@@ -157,14 +158,19 @@ def wort_indexe(w):
 def default_zeit():
     return datetime.datetime.now().time()
 
-def zeit_satz(ti=None):
-    "Vollständiger Satz zur Urzeit als Liste von Worten"
-    t = ti if ti else default_zeit()
-    return [ersetze_stunde(w,t) for w in satz_vorlage(t)]
+def minuten_satz(ti):
+    "Satz für die Minutenanzeige, leere Liste bei ti.minute%5 ==0"
+    return [ i for i in MIW if (ti.minute%5) == i.value]
 
-def zeit_satz_indexe(ti=None):
+def zeit_satz(ti=None,mit_minuten=False):
+    "Vollständiger Satz zur Uhrzeit als Liste von Worten ohne/mit Minuten"
+    t = ti if ti else default_zeit()
+    zs = [ersetze_stunde(w,t) for w in satz_vorlage(t)]
+    return zs + minuten_satz(t) if mit_minuten else zs
+
+def zeit_satz_indexe(ti=None,mit_minuten=False):
     "Alle Indexe des Satzes zur Zeit ti"
-    l = sum( (wort_indexe(i)[1] for i in zeit_satz(ti)), [] )
+    l = sum( (wort_indexe(i)[1] for i in zeit_satz(ti,mit_minuten)), [] )
     l.sort()
     return l
 
@@ -217,6 +223,11 @@ class HTest(unittest.TestCase):
         self.assertNotIn(W.IST,MIW)
         self.assertIn(W.IST,W)
         self.assertNotIn(MIW.M1,W)
+        self.assertEqual(MIW["M1"],MIW.M1)
+        self.assertEqual(minuten_satz(time(12,0)),[])
+        self.assertEqual(minuten_satz(time(12,1)),[MIW.M1])
+        self.assertEqual(minuten_satz(time(0,4)),[MIW.M4])
+        self.assertEqual(minuten_satz(time(1,5)),[])
     def testKoordinaten(self):
         self.assertEqual(wort_koordinaten(W.ES),[(0,0),(0,1)])
         self.assertEqual(wort_koordinaten(W.EIN),[(5,0),(5,1),(5,2)])
@@ -243,9 +254,9 @@ class HTest(unittest.TestCase):
         self.assertEqual(wort_koordinaten(XW.DOM),[(5,4),(5,5),(5,6)])
         # Minutenworte
         self.assertEqual(wort_koordinaten(MIW.M1),[(NROWS,0)])
-        self.assertEqual(wort_koordinaten(MIW.M4),[(NROWS,3)])
+        self.assertEqual(wort_koordinaten(MIW.M4),[(NROWS,0),(NROWS,1),(NROWS,2),(NROWS,3)])
         self.assertEqual(wort_indexe(MIW.M1), (MIW.M1,[110]))
-        self.assertEqual(wort_indexe(MIW.M4), (MIW.M4,[113]))
+        self.assertEqual(wort_indexe(MIW.M4), (MIW.M4,[110,111,112,113]))
     def testKoordinatenIndex(self):
         self.assertEqual(len(index_range()),NROWS*NCOLS)
         self.assertEqual(len(set(index_range())),NROWS*NCOLS)
@@ -302,3 +313,8 @@ class HTest(unittest.TestCase):
         self.assertEqual(zeit_satz(time(1,0)),[W.ES,W.IST,W.EIN,W.UHR])
         self.assertEqual(zeit_satz(time(13,0)),[W.ES,W.IST,W.EIN,W.UHR])
         self.assertEqual(zeit_satz(time(23,0)),[W.ES,W.IST,W.ELF,W.UHR])
+    def testZeitMinutenSatz(self):
+        self.assertEqual(zeit_satz(time(1,25,0),True),[W.ES,W.IST,W.FÜNF_A,W.VOR,W.HALB,W.ZWEI])
+        self.assertEqual(minuten_satz(time(1,21,0)),[MIW.M1])
+        self.assertEqual(zeit_satz(time(1,26,1),True),[W.ES,W.IST,W.FÜNF_A,W.VOR,W.HALB,W.ZWEI,MIW.M1])
+        self.assertEqual(zeit_satz(time(11,54,59),True),[W.ES,W.IST,W.ZEHN_A,W.VOR,W.ZWÖLF,MIW.M4])

@@ -53,7 +53,7 @@ class ColWortGenerator:
             st.setze_wort_color(wi,ci)
 
     def fülle_zeit(self,ti,tkat,st):
-        for wi in zeit_satz(ti):
+        for wi in zeit_satz(ti,True):
             st.setze_wort_color(wi,self.zwort_color(wi,tkat))
 
     def zwort_color(self,w,tkat):

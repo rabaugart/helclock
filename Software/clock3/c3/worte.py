@@ -6,4 +6,7 @@ ELF FÜNF_B EIN EINS ZWEI DREI_B VIER SECHS ACHT SIEBEN ZWÖLF ZEHN_B NEUN UHR".
 # Extra Worte, zusätzlich zur Uhrzeit
 XW = Enum("XW","B BE SO DOM HEL RA F")
 
+# Worte für Minuten
+MIW = Enum("MIW","M1 M2 M3 M4")
+
 TagKat = Enum("TagKat", "Normal Feiertag FamGeburtstag BekGeburtstag")

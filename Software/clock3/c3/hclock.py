@@ -7,7 +7,7 @@ import unittest
 from .color import colors_bytes, SCHWARZ, ROT
 from .xtra import XW
 
-from .worte import W
+from .worte import W, MIW
 
 try:
     from .spi import Spi
@@ -41,6 +41,8 @@ def wort_stamm(w):
     return m.groups()[0]
 
 def wort_koordinaten(w):
+    if w in MIW:
+        return [(NROWS,w.value-1)]
     l = [ (i,t) for (i,(t,l)) in enumerate(TEXT) if w in l ]
     assert(len(l)==1)
     (row,t) = l[0]
@@ -51,6 +53,8 @@ def wort_koordinaten(w):
 
 NROWS = 10
 NCOLS = 11
+NMINUTE = len(MIW)
+MAX_INDEX = NROWS*NCOLS+NMINUTE
 
 #
 # (0,0) -> 10
@@ -67,13 +71,23 @@ NCOLS = 11
 # r8  101  98  81 .. 18    1
 # r9  100  99  80    19    0
 
+# Die Reihe mit den Minuten
+# r10 110 111 112 113
+
 def koordinaten_index(r,c):
     "Abbildung r,c -> i"
+    assert(r>=0 and r<(NROWS+1) and c>=0 and (c < NCOLS if r<=NROWS else c<len(MIW)))
+    if r == 10:
+        # Die Minutenreihe zählt einfach hoch
+        return NROWS*NCOLS+c
     top = (NROWS*NCOLS-1) - NROWS*c # Oberste Reihe
     return top-r if c % 2 == 0 else top-(NROWS-1)+r
 
 def index_koordinaten(i):
     "Abbildung i -> r,c"
+    assert(i>=0 and i<MAX_INDEX)
+    if i>=NROWS*NCOLS:
+        return NROWS,i-NROWS*NCOLS
     c = NROWS-math.floor(i / NROWS)
     top = NROWS*NCOLS-1 - NROWS*c
     r = top-i if c%2 == 0 else i-top+NROWS-1
@@ -83,7 +97,9 @@ def index_range():
     return range(NROWS*NCOLS)
 
 def koordinaten_range():
-    return itertools.product( range(NROWS), range(NCOLS))
+    return itertools.chain(
+        itertools.product( range(NROWS), range(NCOLS)),
+        [(NROWS,i) for i in range(len(MIW))])
 
 # Die im Satz zu nutzende Stunde
 S = Enum('Stunde',[
@@ -193,22 +209,43 @@ class HTest(unittest.TestCase):
         self.assertEqual(wort_stamm(W.ZEHN_A),"ZEHN")
         self.assertEqual(wort_stamm(W.ZWÖLF),"ZWÖLF")
         self.assertEqual(wort_stamm(W.FÜNF_A),"FÜNF")
+    def testMinutenWorte(self):
+        self.assertEqual(len(MIW),4)
+        self.assertEqual(MIW.M1.value,1)
+        self.assertEqual(MIW.M4.value,4)
+        self.assertIn(MIW.M1,MIW)
+        self.assertNotIn(W.IST,MIW)
+        self.assertIn(W.IST,W)
+        self.assertNotIn(MIW.M1,W)
     def testKoordinaten(self):
         self.assertEqual(wort_koordinaten(W.ES),[(0,0),(0,1)])
         self.assertEqual(wort_koordinaten(W.EIN),[(5,0),(5,1),(5,2)])
         self.assertEqual(wort_koordinaten(W.EINS),[(5,0),(5,1),(5,2),(5,3)])
         self.assertEqual(wort_koordinaten(W.FÜNF_A),[(0,7),(0,8),(0,9),(0,10)])
         self.assertEqual(wort_koordinaten(W.ACHT),[(7,7),(7,8),(7,9),(7,10)])
-        self.assertEqual(len(list(koordinaten_range())),110)
-        self.assertEqual(len(set(koordinaten_range())),110)
+        self.assertEqual(len(list(koordinaten_range())),MAX_INDEX)
+        self.assertEqual(len(set(koordinaten_range())),MAX_INDEX)
+        self.assertIn((0,0),koordinaten_range())
+        self.assertIn((0,10),koordinaten_range())
+        self.assertNotIn((0,11),koordinaten_range())
+        self.assertIn((9,10),koordinaten_range())
+        self.assertNotIn((9,11),koordinaten_range())
+        self.assertIn((10,0),koordinaten_range())
+        self.assertIn((10,3),koordinaten_range())
+        self.assertNotIn((10,4),koordinaten_range())
         self.assertEqual(min(koordinaten_range()),(0,0))
-        self.assertEqual(max(koordinaten_range()),(NROWS-1,NCOLS-1))
+        self.assertEqual(max(koordinaten_range()),(NROWS,3))
         self.assertEqual(koordinaten_buchstabe(0,0),'E')
         self.assertEqual(koordinaten_buchstabe(9,10),'R')
         # Extra Worte
         self.assertEqual(wort_koordinaten(XW.B),[(0,2)])
         self.assertEqual(wort_koordinaten(XW.BE),[(3,3),(3,4)])
         self.assertEqual(wort_koordinaten(XW.DOM),[(5,4),(5,5),(5,6)])
+        # Minutenworte
+        self.assertEqual(wort_koordinaten(MIW.M1),[(NROWS,0)])
+        self.assertEqual(wort_koordinaten(MIW.M4),[(NROWS,3)])
+        self.assertEqual(wort_indexe(MIW.M1), (MIW.M1,[110]))
+        self.assertEqual(wort_indexe(MIW.M4), (MIW.M4,[113]))
     def testKoordinatenIndex(self):
         self.assertEqual(len(index_range()),NROWS*NCOLS)
         self.assertEqual(len(set(index_range())),NROWS*NCOLS)

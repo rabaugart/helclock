@@ -79,7 +79,7 @@ class T3(unittest.TestCase):
     def testGeneratorHClock(self):
         s = c3.Spi()
         s.putcolgen(c3.gen.take(c3.hclock.zeit_spi_generator(),1),sleep=0.01)
-        self.assertEqual(len(s.bs[0]),c3.hclock.NROWS*c3.hclock.NCOLS*3)
+        self.assertEqual(len(s.bs[0]),c3.hclock.MAX_INDEX*3)
 
 def testiter(n):
     for i in [c3.ROT,c3.GRÜN]*n:

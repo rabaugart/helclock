@@ -98,7 +98,7 @@ def index_koordinaten(i):
     return r,c
 
 def index_range():
-    return range(NROWS*NCOLS)
+    return range(MAX_INDEX)
 
 def koordinaten_range():
     return itertools.chain(
@@ -261,10 +261,10 @@ class HTest(unittest.TestCase):
         self.assertEqual(wort_indexe(MIW.M1), (MIW.M1,[110]))
         self.assertEqual(wort_indexe(MIW.M4), (MIW.M4,[110,111,112,113]))
     def testKoordinatenIndex(self):
-        self.assertEqual(len(index_range()),NROWS*NCOLS)
-        self.assertEqual(len(set(index_range())),NROWS*NCOLS)
+        self.assertEqual(len(index_range()),MAX_INDEX)
+        self.assertEqual(len(set(index_range())),MAX_INDEX)
         self.assertEqual(min(index_range()),0)
-        self.assertEqual(max(index_range()),NROWS*NCOLS-1)
+        self.assertEqual(max(index_range()),MAX_INDEX-1)
         self.assertEqual(koordinaten_index(0,0),109)
         self.assertEqual(koordinaten_index(9,0),100)
         self.assertEqual(koordinaten_index(0,1),90)

@@ -6,6 +6,7 @@ import c3.color as c
 from .gen import take
 from .hclock import index_range, zeit_satz, wort_indexe
 from .xtra import dt_tagkatcols, dt_tagkat, TagKat, XW
+from .worte import MIW, zeige_minuten
 
 class Strang(list):
 
@@ -55,6 +56,8 @@ class ColWortGenerator:
     def fülle_zeit(self,ti,tkat,st):
         for wi in zeit_satz(ti,True):
             st.setze_wort_color(wi,self.zwort_color(wi,tkat))
+        if not zeige_minuten():
+            st.setze_wort_color(MIW.M4,c.SCHWARZ)
 
     def zwort_color(self,w,tkat):
         return self.ffg if tkat else self.fg

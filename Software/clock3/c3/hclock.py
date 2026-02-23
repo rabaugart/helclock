@@ -7,7 +7,7 @@ import unittest
 from .color import colors_bytes, SCHWARZ, ROT
 from .xtra import XW
 
-from .worte import W
+from .worte import W, MIW, zeige_minuten, aktiviere_minutenanzeige
 
 try:
     from .spi import Spi
@@ -30,6 +30,9 @@ TEXT = [
 
 def koordinaten_buchstabe(r,c):
     "Buchstabe an der Position r,c"
+    if r==NROWS:
+        # Die Minutenanzeige
+        return 'X'
     return TEXT[r][0][c]
 
 STAMM_RE = re.compile("^([^_]+).*$",re.U)
@@ -41,6 +44,9 @@ def wort_stamm(w):
     return m.groups()[0]
 
 def wort_koordinaten(w):
+    if w in MIW:
+        # Alle Minuten-LEDs bis zum Wert
+        return [(NROWS,i) for i in range(w.value)]
     l = [ (i,t) for (i,(t,l)) in enumerate(TEXT) if w in l ]
     assert(len(l)==1)
     (row,t) = l[0]
@@ -51,6 +57,8 @@ def wort_koordinaten(w):
 
 NROWS = 10
 NCOLS = 11
+NMINUTE = len(MIW)
+MAX_INDEX = NROWS*NCOLS+NMINUTE
 
 #
 # (0,0) -> 10
@@ -67,23 +75,35 @@ NCOLS = 11
 # r8  101  98  81 .. 18    1
 # r9  100  99  80    19    0
 
+# Die Reihe mit den Minuten
+# r10 110 111 112 113
+
 def koordinaten_index(r,c):
     "Abbildung r,c -> i"
+    assert(r>=0 and r<(NROWS+1) and c>=0 and (c < NCOLS if r<=NROWS else c<len(MIW)))
+    if r == 10:
+        # Die Minutenreihe zählt einfach hoch
+        return NROWS*NCOLS+c
     top = (NROWS*NCOLS-1) - NROWS*c # Oberste Reihe
     return top-r if c % 2 == 0 else top-(NROWS-1)+r
 
 def index_koordinaten(i):
     "Abbildung i -> r,c"
+    assert(i>=0 and i<MAX_INDEX)
+    if i>=NROWS*NCOLS:
+        return NROWS,i-NROWS*NCOLS
     c = NROWS-math.floor(i / NROWS)
     top = NROWS*NCOLS-1 - NROWS*c
     r = top-i if c%2 == 0 else i-top+NROWS-1
     return r,c
 
 def index_range():
-    return range(NROWS*NCOLS)
+    return range(MAX_INDEX)
 
 def koordinaten_range():
-    return itertools.product( range(NROWS), range(NCOLS))
+    return itertools.chain(
+        itertools.product( range(NROWS), range(NCOLS)),
+        [(NROWS,i) for i in range(len(MIW))])
 
 # Die im Satz zu nutzende Stunde
 S = Enum('Stunde',[
@@ -141,14 +161,21 @@ def wort_indexe(w):
 def default_zeit():
     return datetime.datetime.now().time()
 
-def zeit_satz(ti=None):
-    "Vollständiger Satz zur Urzeit als Liste von Worten"
-    t = ti if ti else default_zeit()
-    return [ersetze_stunde(w,t) for w in satz_vorlage(t)]
+def minuten_satz(ti):
+    "Satz für die Minutenanzeige, leere Liste bei ti.minute%5 == 0"
+    if zeige_minuten():
+        return [ i for i in MIW if (ti.minute%5) == i.value]
+    return []
 
-def zeit_satz_indexe(ti=None):
+def zeit_satz(ti=None,mit_minuten=False):
+    "Vollständiger Satz zur Uhrzeit als Liste von Worten ohne/mit Minuten"
+    t = ti if ti else default_zeit()
+    zs = [ersetze_stunde(w,t) for w in satz_vorlage(t)]
+    return zs + minuten_satz(t) if mit_minuten else zs
+
+def zeit_satz_indexe(ti=None,mit_minuten=False):
     "Alle Indexe des Satzes zur Zeit ti"
-    l = sum( (wort_indexe(i)[1] for i in zeit_satz(ti)), [] )
+    l = sum( (wort_indexe(i)[1] for i in zeit_satz(ti,mit_minuten)), [] )
     l.sort()
     return l
 
@@ -184,6 +211,8 @@ def zeit_spi_generator(ti=None):
 #     python3 -m unittest c3.hclock
 #
 class HTest(unittest.TestCase):
+    def setUp(self):
+        aktiviere_minutenanzeige(True)
     def testSatzIndex(self):
         self.assertEqual(zeit_satz_indexe(time(11,5,0)),
             [6, 9, 10, 13, 26, 29, 30, 33, 34, 45, 50, 54, 69, 70, 90, 109])
@@ -193,27 +222,57 @@ class HTest(unittest.TestCase):
         self.assertEqual(wort_stamm(W.ZEHN_A),"ZEHN")
         self.assertEqual(wort_stamm(W.ZWÖLF),"ZWÖLF")
         self.assertEqual(wort_stamm(W.FÜNF_A),"FÜNF")
+    def testMinutenWorte(self):
+        self.assertEqual(len(MIW),4)
+        self.assertEqual(MIW.M1.value,1)
+        self.assertEqual(MIW.M4.value,4)
+        self.assertIn(MIW.M1,MIW)
+        self.assertNotIn(W.IST,MIW)
+        self.assertIn(W.IST,W)
+        self.assertNotIn(MIW.M1,W)
+        self.assertEqual(MIW["M1"],MIW.M1)
+        self.assertEqual(minuten_satz(time(12,0)),[])
+        self.assertEqual(minuten_satz(time(12,1)),[MIW.M1])
+        self.assertEqual(minuten_satz(time(0,4)),[MIW.M4])
+        self.assertEqual(minuten_satz(time(1,5)),[])
+    def testMinutenWorteOhneMinuten(self):
+        aktiviere_minutenanzeige(False)
+        self.assertEqual(minuten_satz(time(12,1)),[])
+        self.assertEqual(minuten_satz(time(0,4)),[])
     def testKoordinaten(self):
         self.assertEqual(wort_koordinaten(W.ES),[(0,0),(0,1)])
         self.assertEqual(wort_koordinaten(W.EIN),[(5,0),(5,1),(5,2)])
         self.assertEqual(wort_koordinaten(W.EINS),[(5,0),(5,1),(5,2),(5,3)])
         self.assertEqual(wort_koordinaten(W.FÜNF_A),[(0,7),(0,8),(0,9),(0,10)])
         self.assertEqual(wort_koordinaten(W.ACHT),[(7,7),(7,8),(7,9),(7,10)])
-        self.assertEqual(len(list(koordinaten_range())),110)
-        self.assertEqual(len(set(koordinaten_range())),110)
+        self.assertEqual(len(list(koordinaten_range())),MAX_INDEX)
+        self.assertEqual(len(set(koordinaten_range())),MAX_INDEX)
+        self.assertIn((0,0),koordinaten_range())
+        self.assertIn((0,10),koordinaten_range())
+        self.assertNotIn((0,11),koordinaten_range())
+        self.assertIn((9,10),koordinaten_range())
+        self.assertNotIn((9,11),koordinaten_range())
+        self.assertIn((10,0),koordinaten_range())
+        self.assertIn((10,3),koordinaten_range())
+        self.assertNotIn((10,4),koordinaten_range())
         self.assertEqual(min(koordinaten_range()),(0,0))
-        self.assertEqual(max(koordinaten_range()),(NROWS-1,NCOLS-1))
+        self.assertEqual(max(koordinaten_range()),(NROWS,3))
         self.assertEqual(koordinaten_buchstabe(0,0),'E')
         self.assertEqual(koordinaten_buchstabe(9,10),'R')
         # Extra Worte
         self.assertEqual(wort_koordinaten(XW.B),[(0,2)])
         self.assertEqual(wort_koordinaten(XW.BE),[(3,3),(3,4)])
         self.assertEqual(wort_koordinaten(XW.DOM),[(5,4),(5,5),(5,6)])
+        # Minutenworte
+        self.assertEqual(wort_koordinaten(MIW.M1),[(NROWS,0)])
+        self.assertEqual(wort_koordinaten(MIW.M4),[(NROWS,0),(NROWS,1),(NROWS,2),(NROWS,3)])
+        self.assertEqual(wort_indexe(MIW.M1), (MIW.M1,[110]))
+        self.assertEqual(wort_indexe(MIW.M4), (MIW.M4,[110,111,112,113]))
     def testKoordinatenIndex(self):
-        self.assertEqual(len(index_range()),NROWS*NCOLS)
-        self.assertEqual(len(set(index_range())),NROWS*NCOLS)
+        self.assertEqual(len(index_range()),MAX_INDEX)
+        self.assertEqual(len(set(index_range())),MAX_INDEX)
         self.assertEqual(min(index_range()),0)
-        self.assertEqual(max(index_range()),NROWS*NCOLS-1)
+        self.assertEqual(max(index_range()),MAX_INDEX-1)
         self.assertEqual(koordinaten_index(0,0),109)
         self.assertEqual(koordinaten_index(9,0),100)
         self.assertEqual(koordinaten_index(0,1),90)
@@ -265,3 +324,14 @@ class HTest(unittest.TestCase):
         self.assertEqual(zeit_satz(time(1,0)),[W.ES,W.IST,W.EIN,W.UHR])
         self.assertEqual(zeit_satz(time(13,0)),[W.ES,W.IST,W.EIN,W.UHR])
         self.assertEqual(zeit_satz(time(23,0)),[W.ES,W.IST,W.ELF,W.UHR])
+    def testZeitMinutenSatz(self):
+        self.assertEqual(zeit_satz(time(1,25,0),True),[W.ES,W.IST,W.FÜNF_A,W.VOR,W.HALB,W.ZWEI])
+        self.assertEqual(minuten_satz(time(1,21,0)),[MIW.M1])
+        self.assertEqual(zeit_satz(time(1,26,1),True),[W.ES,W.IST,W.FÜNF_A,W.VOR,W.HALB,W.ZWEI,MIW.M1])
+        self.assertEqual(zeit_satz(time(11,54,59),True),[W.ES,W.IST,W.ZEHN_A,W.VOR,W.ZWÖLF,MIW.M4])
+    def testZeitMinutenSatzOhneMinuten(self):
+        aktiviere_minutenanzeige(False)
+        self.assertEqual(zeit_satz(time(1,25,0),True),[W.ES,W.IST,W.FÜNF_A,W.VOR,W.HALB,W.ZWEI])
+        self.assertEqual(minuten_satz(time(1,21,0)),[])
+        self.assertEqual(zeit_satz(time(1,26,1),True),[W.ES,W.IST,W.FÜNF_A,W.VOR,W.HALB,W.ZWEI])
+        self.assertEqual(zeit_satz(time(11,54,59),True),[W.ES,W.IST,W.ZEHN_A,W.VOR,W.ZWÖLF])

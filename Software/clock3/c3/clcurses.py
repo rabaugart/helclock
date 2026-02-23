@@ -1,6 +1,7 @@
 import curses, time
 
 from .hclock import index_buchstaben_pos, zeit_satz_indexe
+from .worte import aktiviere_minutenanzeige
 
 class CRenderer:
     TIMEOUT = 100 # ms
@@ -26,10 +27,11 @@ class CRenderer:
                 continue
             w.clear()
             w.addstr(1,1,"Beenden mit q")
-            for b,i,r,c in index_buchstaben_pos(zeit_satz_indexe()):
+            for b,i,r,c in index_buchstaben_pos(zeit_satz_indexe(None,True)):
                 w.addstr( 5+2*r, 5+3*c, b)
             w.refresh()
         curses.reset_shell_mode()
         curses.resetty()
 
+aktiviere_minutenanzeige(True)
 CR = CRenderer()

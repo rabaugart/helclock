@@ -6,6 +6,7 @@ import c3.color as c
 from .gen import take
 from .hclock import index_range, zeit_satz, wort_indexe
 from .xtra import dt_tagkatcols, dt_tagkat, TagKat, XW
+from .worte import MIW, zeige_minuten
 
 class Strang(list):
 
@@ -53,8 +54,10 @@ class ColWortGenerator:
             st.setze_wort_color(wi,ci)
 
     def fülle_zeit(self,ti,tkat,st):
-        for wi in zeit_satz(ti):
+        for wi in zeit_satz(ti,True):
             st.setze_wort_color(wi,self.zwort_color(wi,tkat))
+        if not zeige_minuten():
+            st.setze_wort_color(MIW.M4,c.SCHWARZ)
 
     def zwort_color(self,w,tkat):
         return self.ffg if tkat else self.fg
@@ -91,8 +94,8 @@ class TestGen(unittest.TestCase):
         cl = list(take(g,1))[0]
         self.assertEqual(len(cl),Strang.SLEN)
         self.assertEqual(set(cl),set([ColWortGenerator.FG_COLOR,ColWortGenerator.BG_COLOR]))
-        # Hört mit ES IST ... auf
-        self.assertEqual(cl[-1],ColWortGenerator.FG_COLOR)
+        # Hört mit ES IST ... auf (vor den 4 Minuten LEDs)
+        self.assertEqual(cl[-5],ColWortGenerator.FG_COLOR)
         # Mehr als ES IST...
         self.assertGreater(cl.count(ColWortGenerator.FG_COLOR),5)
     def testXtra1(self):

@@ -5,6 +5,8 @@ from .messages import MKEYS, MTYPES
 from .broker import Broker
 from .genset import GENSETS
 
+DEFAULT_CONTEXT = "service"
+
 class Controler:
     def __init__(self,genset,spi=None):
         self.broker = Broker()
@@ -67,7 +69,7 @@ class Controler:
             yield m
 
 def controler_from_argv():
-    ctx = "service" if len(sys.argv) < 2 else sys.argv[1]
+    ctx = DEFAULT_CONTEXT if len(sys.argv) < 2 else sys.argv[1]
     if not ctx in GENSETS:
         l = ", ".join(GENSETS.keys())
         raise RuntimeError(f"Unbekanter Kontext: {ctx}, verfügbar {l}")

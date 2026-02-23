@@ -19,3 +19,4 @@ from .generator import TestGen
 
 from .server.messages import MsgTest
 from .server.test import ControlerTest
+from .worte import aktiviere_minutenanzeige

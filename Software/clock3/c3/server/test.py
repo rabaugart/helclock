@@ -1,7 +1,8 @@
-import asyncio, json
+import asyncio, json, os
 from .controler import Controler
 from .messages import MKEYS, MTYPES, Command
-from .genset import TestGenSet
+from .genset import TestGenSet, SERIALIZATION_FNAME
+import c3.color as col
 
 import unittest
 
@@ -30,6 +31,11 @@ class MockReceiver:
             pass
 
 class ControlerTest(unittest.TestCase):
+
+    def tearDown(self):
+        try:
+            os.unlink(SERIALIZATION_FNAME)
+        except Exception as e: pass
 
     async def startStop(self,con):
         t = asyncio.create_task(con.run())
@@ -81,3 +87,13 @@ class ControlerTest(unittest.TestCase):
         self.assertIn(MKEYS.selected_generator.name, ks)
         self.assertGreater( len(json.dumps(c.msg_dict())),50)
         #self.assertEqual(json.dumps(c.msg_dict()),"")
+
+    def testSerialization(self):
+        c = TestGenSet()
+        js = c.serialize()
+        # Sichere die Farben
+        ft = c.generators[0].farbmap
+        # Ändere die Farben
+        c.generators[0].farbmap = dict( (c,col.BLAU) for c in ft.keys())
+        c.deserialize(js)
+        self.assertEqual(c.generators[0].farbmap,ft)

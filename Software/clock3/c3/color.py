@@ -28,10 +28,20 @@ class Color:
             RGB.grün.name: self.b[1],
             RGB.blau.name: self.b[2],
         }
+    def serialize(self):
+        return self.b.hex()
+    @staticmethod
+    def deserialize(bs):
+        b = bytearray.fromhex(bs)
+        return Color(b[0],b[1],b[2])
     def __str__(self):
         return f"C({self.b[0]},{self.b[1]},{self.b[2]})"
     def __repr__(self):
         return self.__str__()
+    def __eq__(self,o):
+        if isinstance(o,Color):
+            return self.b == o.b
+        return False
 
 
 ROT = Color(255,0,0)

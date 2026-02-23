@@ -41,6 +41,10 @@ class T3(unittest.TestCase):
         self.assertEqual(c3.ternär_colors(10),[c3.GRÜN,c3.ROT,c3.GRÜN])
         self.assertEqual(c3.ternär_colors(10,4),[c3.ROT,c3.GRÜN,c3.ROT,c3.GRÜN])
         self.assertEqual(c3.ternär_colors(59),[c3.BLAU,c3.ROT,c3.GRÜN,c3.BLAU])
+    def testColorSerialization(self):
+        s = c3.BLAU.serialize()
+        b = c3.Color.deserialize(s)
+        self.assertEqual(c3.BLAU,b)
     def testSpi(self):
         s = c3.Spi()
         s.putcolors([c3.ROT,c3.BLAU])

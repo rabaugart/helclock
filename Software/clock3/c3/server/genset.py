@@ -29,8 +29,11 @@ class GenSetBase:
 
 class ProdGenSet(GenSetBase):
 
-    def __init__(self):
+    def __init__(self,zeige_minuten):
         GenSetBase.__init__(self)
+        from c3 import aktiviere_minutenanzeige
+        aktiviere_minutenanzeige(zeige_minuten)
+        print("Mit" if zeige_minuten else "Ohne","Minutenanzeige")
         self.generators = [
             AGenerator("Clock A",ClockGen),
             AGenerator("Clock B",ClockGen),
@@ -50,6 +53,7 @@ class TestGenSet(GenSetBase):
         ]
 
 GENSETS = {
-    "service": ProdGenSet,
+    "service_min": lambda:ProdGenSet(True),
+    "service": lambda:ProdGenSet(False),
     "testservice": TestGenSet,
 }

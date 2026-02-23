@@ -1,6 +1,7 @@
 import curses, time
 
 from .hclock import index_buchstaben_pos, zeit_satz_indexe
+from .worte import aktiviere_minutenanzeige
 
 class CRenderer:
     TIMEOUT = 100 # ms
@@ -32,4 +33,5 @@ class CRenderer:
         curses.reset_shell_mode()
         curses.resetty()
 
+aktiviere_minutenanzeige(True)
 CR = CRenderer()

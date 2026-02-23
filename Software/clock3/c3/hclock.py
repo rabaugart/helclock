@@ -7,7 +7,7 @@ import unittest
 from .color import colors_bytes, SCHWARZ, ROT
 from .xtra import XW
 
-from .worte import W, MIW
+from .worte import W, MIW, zeige_minuten, aktiviere_minutenanzeige
 
 try:
     from .spi import Spi
@@ -162,8 +162,10 @@ def default_zeit():
     return datetime.datetime.now().time()
 
 def minuten_satz(ti):
-    "Satz für die Minutenanzeige, leere Liste bei ti.minute%5 ==0"
-    return [ i for i in MIW if (ti.minute%5) == i.value]
+    "Satz für die Minutenanzeige, leere Liste bei ti.minute%5 == 0"
+    if zeige_minuten():
+        return [ i for i in MIW if (ti.minute%5) == i.value]
+    return []
 
 def zeit_satz(ti=None,mit_minuten=False):
     "Vollständiger Satz zur Uhrzeit als Liste von Worten ohne/mit Minuten"
@@ -209,6 +211,8 @@ def zeit_spi_generator(ti=None):
 #     python3 -m unittest c3.hclock
 #
 class HTest(unittest.TestCase):
+    def setUp(self):
+        aktiviere_minutenanzeige(True)
     def testSatzIndex(self):
         self.assertEqual(zeit_satz_indexe(time(11,5,0)),
             [6, 9, 10, 13, 26, 29, 30, 33, 34, 45, 50, 54, 69, 70, 90, 109])
@@ -231,6 +235,10 @@ class HTest(unittest.TestCase):
         self.assertEqual(minuten_satz(time(12,1)),[MIW.M1])
         self.assertEqual(minuten_satz(time(0,4)),[MIW.M4])
         self.assertEqual(minuten_satz(time(1,5)),[])
+    def testMinutenWorteOhneMinuten(self):
+        aktiviere_minutenanzeige(False)
+        self.assertEqual(minuten_satz(time(12,1)),[])
+        self.assertEqual(minuten_satz(time(0,4)),[])
     def testKoordinaten(self):
         self.assertEqual(wort_koordinaten(W.ES),[(0,0),(0,1)])
         self.assertEqual(wort_koordinaten(W.EIN),[(5,0),(5,1),(5,2)])
@@ -321,3 +329,9 @@ class HTest(unittest.TestCase):
         self.assertEqual(minuten_satz(time(1,21,0)),[MIW.M1])
         self.assertEqual(zeit_satz(time(1,26,1),True),[W.ES,W.IST,W.FÜNF_A,W.VOR,W.HALB,W.ZWEI,MIW.M1])
         self.assertEqual(zeit_satz(time(11,54,59),True),[W.ES,W.IST,W.ZEHN_A,W.VOR,W.ZWÖLF,MIW.M4])
+    def testZeitMinutenSatzOhneMinuten(self):
+        aktiviere_minutenanzeige(False)
+        self.assertEqual(zeit_satz(time(1,25,0),True),[W.ES,W.IST,W.FÜNF_A,W.VOR,W.HALB,W.ZWEI])
+        self.assertEqual(minuten_satz(time(1,21,0)),[])
+        self.assertEqual(zeit_satz(time(1,26,1),True),[W.ES,W.IST,W.FÜNF_A,W.VOR,W.HALB,W.ZWEI])
+        self.assertEqual(zeit_satz(time(11,54,59),True),[W.ES,W.IST,W.ZEHN_A,W.VOR,W.ZWÖLF])

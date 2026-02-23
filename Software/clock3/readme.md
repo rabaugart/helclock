@@ -2,7 +2,10 @@
 
 Starten der Uhr mit dem `quart`-Server
 
-    python -m c3.server [service|test]
+    python -m c3.server [service|service_min|test]
+
+Kontext `service|service_min` mit|ohne Minutenanzeige
+Default ist `service` (`controler.py`).
 
 Starten der `curses`-Clock
 

@@ -92,7 +92,7 @@ class TestGen(unittest.TestCase):
         self.assertEqual(len(cl),Strang.SLEN)
         self.assertEqual(set(cl),set([ColWortGenerator.FG_COLOR,ColWortGenerator.BG_COLOR]))
         # Hört mit ES IST ... auf (vor den 4 Minuten LEDs)
-        self.assertEqual(cl[-4],ColWortGenerator.FG_COLOR)
+        self.assertEqual(cl[-5],ColWortGenerator.FG_COLOR)
         # Mehr als ES IST...
         self.assertGreater(cl.count(ColWortGenerator.FG_COLOR),5)
     def testXtra1(self):
